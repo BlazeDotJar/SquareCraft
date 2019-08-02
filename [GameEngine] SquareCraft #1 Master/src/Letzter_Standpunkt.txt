@@ -1,0 +1,1 @@
+Kollisionen von Player und Zombie angefangen
