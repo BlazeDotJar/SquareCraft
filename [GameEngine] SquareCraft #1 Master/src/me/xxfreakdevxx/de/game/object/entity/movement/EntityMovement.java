@@ -91,7 +91,7 @@ public class EntityMovement {
 	
 	
 	private boolean isJumping = false;
-	private float jumpStrength = 6f;
+	private float jumpStrength = 5.7f;
 	private float cur_jump_strength = 0f;
 	private void applyJump() {
 		if(isJumping) {

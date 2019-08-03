@@ -34,6 +34,7 @@ public class TextureAtlas {
 			Material material = Material.values()[i];
 			textures.put(material.getName(), loadImage(material.getFilePath()));
 		}
+		textures.put("welt-bg.jpg", loadImage("/assets/textures/welt-bg.jpg"));	
 	}
 	
 	public static BufferedImage getTexture(String key) {

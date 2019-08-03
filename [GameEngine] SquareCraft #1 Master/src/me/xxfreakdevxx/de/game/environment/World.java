@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import me.xxfreakdevxx.de.game.Camera;
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
+import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.object.block.AirBlock;
 import me.xxfreakdevxx.de.game.object.block.Block;
 import me.xxfreakdevxx.de.game.object.block.DirtBlock;
@@ -79,6 +80,7 @@ public class World {
 	private int bsize = SquareCraft.blocksize;
 	public void render(Graphics g) {
 		if(isGenerated == false) return;
+		g.drawImage(TextureAtlas.getTexture("welt-bg.jpg"), 0,0, SquareCraft.windowWidth, SquareCraft.windowHeight, null);
 		//Es darf keine Camera Coords addiert werden in der Render Methode!
 		//Des werden nur die Blöcke gerendert, die im Bildschirm sind
 		rendered_blocks = 0;
