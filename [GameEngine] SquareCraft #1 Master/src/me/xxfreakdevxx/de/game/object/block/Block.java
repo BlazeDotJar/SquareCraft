@@ -15,6 +15,7 @@ public abstract class Block extends GameObject {
 	protected Material material;
 	protected boolean showSelection = false;
 	protected Color selection_color = new Color(1f,1f,0f,0.1f);
+	protected int chunk_id = 0;
 	public Block(Material material, Location location) {
 		super(ID.BLOCK, location, SquareCraft.blocksize, SquareCraft.blocksize);
 		this.material = material;
@@ -30,6 +31,8 @@ public abstract class Block extends GameObject {
 	public void select() {
 		this.showSelection = !this.showSelection;
 	}
-	
+	public void setChunk(int id) {
+		chunk_id = id;
+	}
 
 }

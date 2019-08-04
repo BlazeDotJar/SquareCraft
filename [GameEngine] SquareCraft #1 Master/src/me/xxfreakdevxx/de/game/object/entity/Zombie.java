@@ -14,7 +14,7 @@ import me.xxfreakdevxx.de.game.object.block.Block;
 public class Zombie extends Entity {
 	
 	@SuppressWarnings("unused")
-	private Camera cam = SquareCraft.getInstance().getCamera();
+	private Camera cam = SquareCraft.getCamera();
 	
 	public Zombie(Location location, double health) {
 		super(ID.ENEMY, location, SquareCraft.blocksize, SquareCraft.blocksize, health);

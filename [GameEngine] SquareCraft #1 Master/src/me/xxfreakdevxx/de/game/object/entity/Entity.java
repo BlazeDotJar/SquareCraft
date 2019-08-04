@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import me.xxfreakdevxx.de.game.Location;
+import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.object.GameObject;
 import me.xxfreakdevxx.de.game.object.ID;
@@ -19,10 +20,10 @@ public abstract class Entity extends GameObject {
 	protected int indicatorTime = 0;
 	protected double health = 20.0D;
 	protected double maxHealth = 20.0D;
-	protected int movementSpeed = 5;
 	protected boolean isDead = false;
 	protected double fall_distance = 0d;
 	protected boolean isOnGround = false;
+	public boolean noclip = false;
 	
 	protected ColissionDetector colission = null;
 	protected EntityMovement movement = null;
@@ -63,9 +64,10 @@ public abstract class Entity extends GameObject {
 	public void renderDisplayname(Graphics g) {
 		g.setFont(new Font("consolas", 0, 14));
 		g.setColor(new Color(0f,0f,0f,0.4f));
-		g.fillRect((getLocation().getIntX(true)+(width/2) - 50), (int) (getLocation().getIntY(true)-19-healthbarHeight), 100, 16);
+		g.fillRect((getLocation().getIntX(true)-(SquareCraft.calculateStringWidth(g.getFont(), displayname)/2)+10)-2, (int) (getLocation().getIntY(true)-19-healthbarHeight), SquareCraft.calculateStringWidth(g.getFont(), displayname)+4, 16);
+//		g.fillRect((getLocation().getIntX(true)+(width/2) - 50), (int) (getLocation().getIntY(true)-19-healthbarHeight), 100, 16);
 		g.setColor(Color.WHITE);
-		g.drawString(displayname, (getLocation().getIntX(true)+(width/2) - 48), getLocation().getIntY(true)-7-(int)healthbarHeight);
+		g.drawString(displayname, (getLocation().getIntX(true)-(SquareCraft.calculateStringWidth(g.getFont(), displayname)/2)+10), getLocation().getIntY(true)-7-(int)healthbarHeight);
 	}
 
 	public Location getLocation() {
@@ -95,14 +97,6 @@ public abstract class Entity extends GameObject {
 		this.health = health;
 	}
 	
-	public int getMovemetSpeed() {
-		return movementSpeed;
-	}
-	
-	public void setMovemetSpeed(int movementSpeed) {
-		this.movementSpeed = movementSpeed;
-	}
-
 	public boolean isDead() {
 		return isDead;
 	}

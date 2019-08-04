@@ -1,8 +1,11 @@
 package me.xxfreakdevxx.de.game;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +26,7 @@ public class SquareCraft extends Canvas implements Runnable {
 	private Thread thread;
 	private Camera camera;
 	private TextureAtlas textureAtlas;
-	public static final int blocksize = 32;
+	public static final int blocksize = 20;
 	
 	//Manager, Handler, etc.
 	public KeyInput keyinput = null;
@@ -48,9 +51,10 @@ public class SquareCraft extends Canvas implements Runnable {
 	
 	public void preInit() {
 		keyinput = new KeyInput();
+		camera = new Camera(0,0);
 		this.addKeyListener(keyinput);
 		this.addMouseListener(new MouseInput());
-		camera = new Camera(0,0);
+		this.addMouseMotionListener(new MouseMotion());
 		textureAtlas = new TextureAtlas();
 		gsmanager = new GSManager();
 	}
@@ -142,10 +146,15 @@ public class SquareCraft extends Canvas implements Runnable {
 		return textureAtlas;
 	}
 	
-	public Camera getCamera() {
-		return camera;
+	public static Camera getCamera() {
+		return getInstance().camera;
 	}
-	
+	public static int calculateStringWidth(Font font, String enteredText) {
+		BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		FontMetrics fm = img.getGraphics().getFontMetrics(font);
+		int width = fm.stringWidth(enteredText);
+		return width;
+	}
 	@SuppressWarnings("deprecation")
 	public static String getTimeInString() {
 		SimpleDateFormat sdf = new SimpleDateFormat();

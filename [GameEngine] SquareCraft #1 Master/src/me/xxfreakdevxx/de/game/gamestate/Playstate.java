@@ -8,6 +8,7 @@ import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.environment.World.WorldSize;
 import me.xxfreakdevxx.de.game.gamestate.GSManager.GameState;
 import me.xxfreakdevxx.de.game.gamestate.GSManager.States;
+import me.xxfreakdevxx.de.game.gui.WAILA;
 
 public class Playstate extends GameState {
 	
@@ -39,8 +40,9 @@ public class Playstate extends GameState {
 //		g.setColor(Color.RED);
 //		g.drawRect((int)(-SquareCraft.getInstance().getCamera().getX()), (int)(-SquareCraft.getInstance().getCamera().getY()), SquareCraft.windowWidth, SquareCraft.windowHeight);
 		g.setColor(Color.BLACK);
-		g.drawString("FPS: "+SquareCraft.fps_current+" Camera X/Y: "+game.getCamera().getX()+"/"+game.getCamera().getY(), 10, 10);
+		g.drawString("FPS: "+SquareCraft.fps_current+" Camera X/Y: "+SquareCraft.getCamera().getX()+"/"+SquareCraft.getCamera().getY(), 10, 10);
 		g.drawString("Status WORLD: "+world.status, 10, 40);
+		WAILA.displayBlock(g);
 	}
 	@Override
 	public void tick() {

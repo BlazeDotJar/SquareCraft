@@ -5,7 +5,9 @@ public enum Material {
 	AIR(0, "air", "Luft", false, "", ""),
 	STONE(1, "stone", "Stein", true, "/assets/textures/block/stone_2.png", ""),
 	DIRT(2, "dirt", "Dreck", true, "/assets/textures/block/dirt_2.png", ""),
-	GRASS(3, "grass", "Gras", true, "/assets/textures/block/grass_2.png", "");
+	GRASS(3, "gras", "Gras", true, "/assets/textures/block/grass_2.png", ""),
+	SAND(4, "sand", "Sand", true, "/assets/textures/block/sand.png", ""),
+	IRON_ORE(4, "eisenerz", "Eisenerz", true, "/assets/textures/block/iron_ore.png", "");
 	
 	int id = 0;
 	String name, displayname, filepath, audiofilepath;

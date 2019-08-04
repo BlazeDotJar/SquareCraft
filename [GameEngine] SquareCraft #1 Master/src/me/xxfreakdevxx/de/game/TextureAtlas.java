@@ -34,7 +34,10 @@ public class TextureAtlas {
 			Material material = Material.values()[i];
 			textures.put(material.getName(), loadImage(material.getFilePath()));
 		}
-		textures.put("welt-bg.jpg", loadImage("/assets/textures/welt-bg.jpg"));	
+		textures.put("welt-bg", loadImage("/assets/textures/welt-bg.jpg"));	
+		textures.put("sand_vein_1", loadImage("/assets/textures/vein/sand_vein_1.png"));	
+		textures.put("sand_vein_2", loadImage("/assets/textures/vein/sand_vein_2.png"));	
+		textures.put("sand_vein_3", loadImage("/assets/textures/vein/sand_vein_3.png"));	
 	}
 	
 	public static BufferedImage getTexture(String key) {

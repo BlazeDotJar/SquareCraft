@@ -5,7 +5,10 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import me.xxfreakdevxx.de.game.environment.World;
+import me.xxfreakdevxx.de.game.environment.World.ChunkManager;
 import me.xxfreakdevxx.de.game.gamestate.Playstate;
+import me.xxfreakdevxx.de.game.object.block.Block;
+import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
 
 public class KeyInput extends KeyAdapter {
 	
@@ -20,39 +23,68 @@ public class KeyInput extends KeyAdapter {
 		ticked++;
 		if(ticked == 1) ticked = 0;
 		else return;
-		for(int key : pressed_keys) {
-			switch(key) {
-			case KeyEvent.VK_RIGHT:
-				SquareCraft.getInstance().getCamera().addX(1);
-				break;
-			case KeyEvent.VK_LEFT:
-				SquareCraft.getInstance().getCamera().addX(-1);
-				break;
-			case KeyEvent.VK_UP:
-				SquareCraft.getInstance().getCamera().addY(-1);
-				break;
-			case KeyEvent.VK_DOWN:
-				SquareCraft.getInstance().getCamera().addY(1);
-				break;
-			case KeyEvent.VK_L:
-				((Playstate)SquareCraft.getInstance().gsmanager.state).world.listBlocks();
-				release(key);
-				break;
-			case KeyEvent.VK_SPACE:
-				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressUp() == false) release(key);
-				break;
-			case KeyEvent.VK_W:
-				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressUp() == false) release(key);
-				break;
-			case KeyEvent.VK_A:
-				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressLeft() == false) release(key);
-				break;
-			case KeyEvent.VK_S:
-				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressDown() == false) release(key);
-				break;
-			case KeyEvent.VK_D:
-				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressRight() == false) release(key);
-				break;
+		if(World.getWorld() != null && World.getWorld().isGenerated) {			
+			for(int key : pressed_keys) {
+				switch(key) {
+				case KeyEvent.VK_RIGHT:
+					SquareCraft.getCamera().addX(1);
+					break;
+				case KeyEvent.VK_F:
+					World.getWorld().physics.allow_gravity = !World.getWorld().physics.allow_gravity;
+					if(World.getWorld().physics.allow_gravity){
+						World.getWorld().player.setFallDistance(0d);
+						EntityMovement m = World.getWorld().player.getMovement();
+						if(m.x_add == -1) m.x_velocity -= 8f;
+						else if(m.x_add == 1) m.x_velocity += 8f;
+						if(m.y_add == -1) m.y_velocity -= 8f;
+						else if(m.y_add == 1) m.y_velocity += 8f;
+					}
+					release(key);
+					break;
+				case KeyEvent.VK_N:
+					World.getWorld().player.noclip = !World.getWorld().player.noclip;
+					break;
+				case KeyEvent.VK_1:
+					World.getWorld().player.displayname = "IchMagOmasKekse";
+					for(Block block : ChunkManager.getChunk(1).getBlocks().values()) {
+						System.out.println("Block Type: "+block.getMaterial().getDisplayname());
+					}
+					break;
+				case KeyEvent.VK_2:
+					World.getWorld().player.displayname = "Lea";
+					break;
+				case KeyEvent.VK_G:
+					World.getWorld().regenerate();
+					break;
+				case KeyEvent.VK_LEFT:
+					SquareCraft.getCamera().addX(-1);
+					break;
+				case KeyEvent.VK_UP:
+					SquareCraft.getCamera().addY(-1);
+					break;
+				case KeyEvent.VK_DOWN:
+					SquareCraft.getCamera().addY(1);
+					break;
+				case KeyEvent.VK_L:
+					((Playstate)SquareCraft.getInstance().gsmanager.state).world.listBlocks();
+					release(key);
+					break;
+				case KeyEvent.VK_SPACE:
+					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressUp() == false) release(key);
+					break;
+				case KeyEvent.VK_W:
+					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressUp() == false) release(key);
+					break;
+				case KeyEvent.VK_A:
+					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressLeft() == false) release(key);
+					break;
+				case KeyEvent.VK_S:
+					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressDown() == false) release(key);
+					break;
+				case KeyEvent.VK_D:
+					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressRight() == false) release(key);
+					break;
+				}
 			}
 		}
 	}
@@ -81,22 +113,24 @@ public class KeyInput extends KeyAdapter {
 		pressed_keys.remove(key);
 		
 		//Spieler Movement zurücksetzen
-		switch(key) {
-		case KeyEvent.VK_SPACE:
-			if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseUp();
-			break;
-		case KeyEvent.VK_W:
-			if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseUp();
-			break;
-		case KeyEvent.VK_A:
-			if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseLeft();
-			break;
-		case KeyEvent.VK_S:
-			if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseDown();
-			break;
-		case KeyEvent.VK_D:
-			if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseRight();
-			break;
+		if(World.getWorld() != null && World.getWorld().isGenerated) {			
+			switch(key) {
+			case KeyEvent.VK_SPACE:
+				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseUp();
+				break;
+			case KeyEvent.VK_W:
+				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseUp();
+				break;
+			case KeyEvent.VK_A:
+				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseLeft();
+				break;
+			case KeyEvent.VK_S:
+				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseDown();
+				break;
+			case KeyEvent.VK_D:
+				if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) ((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().releaseRight();
+				break;
+			}
 		}
 	}
 	

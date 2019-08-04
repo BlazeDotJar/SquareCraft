@@ -111,19 +111,19 @@ public class Location {
 		return world;
 	}
 	public double getX(boolean addCameraX) {
-		if(addCameraX) return (xCurrent - SquareCraft.getInstance().getCamera().getX());
+		if(addCameraX) return (xCurrent - SquareCraft.getCamera().getX());
 		else return xCurrent;
 	}
 	public double getY(boolean addCameraY) {
-		if(addCameraY) return (yCurrent - SquareCraft.getInstance().getCamera().getY());
+		if(addCameraY) return (yCurrent - SquareCraft.getCamera().getY());
 		else return yCurrent;
 	}
 	public int getIntX(boolean addCameraX) {
-		if(addCameraX) return ((int)(xCurrent - SquareCraft.getInstance().getCamera().getX()));
+		if(addCameraX) return ((int)(xCurrent - SquareCraft.getCamera().getX()));
 		else return (int)xCurrent;
 	}
 	public int getIntY(boolean addCameraY) {
-		if(addCameraY) return ((int)(yCurrent - SquareCraft.getInstance().getCamera().getY()));
+		if(addCameraY) return ((int)(yCurrent - SquareCraft.getCamera().getY()));
 		else return (int)yCurrent;
 	}
 	public int getBlockIntX() {

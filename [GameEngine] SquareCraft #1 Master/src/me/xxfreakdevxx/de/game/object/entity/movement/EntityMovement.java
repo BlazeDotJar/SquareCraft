@@ -2,6 +2,7 @@ package me.xxfreakdevxx.de.game.object.entity.movement;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.object.entity.Entity;
 
 public class EntityMovement {
@@ -12,12 +13,17 @@ public class EntityMovement {
 	private boolean allow_left = true;
 	private boolean allow_up = true;
 	private boolean allow_fall = true;
+	public float y_velocity = 0f;
+	public float x_velocity = 0f;
 	
 	public int move_type = 1;
 	
 	private ConcurrentLinkedDeque<String> pressed = new ConcurrentLinkedDeque<String>();
 	
-	private double movement_speed = 4.5d;
+	private double movement_speed = 3.5d;
+	private double fly_movement_speed = 9d;
+	private boolean isJumping = false; //Ist der Spieler gerade in einem Sprung?
+	private float jumpStrength = 4f; //Sprungkraft
 	
 	
 	public EntityMovement(Entity target) {
@@ -64,8 +70,8 @@ public class EntityMovement {
 		pressed.remove("d");
 	}
 	
-	private int x_add = 0;
-	private int y_add = 0;
+	public int x_add = 0;
+	public int y_add = 0;
 	private double smoothness = 0.0f;
 	public void move() {
 		if(pressed.isEmpty() == false) {
@@ -81,18 +87,22 @@ public class EntityMovement {
 			}
 			
 			if(x_add == -1 || x_add == 1) if(smoothness < 0.5D) smoothness += 0.02D;
-			target.getUnclonedLocation().add((x_add * movement_speed * smoothness), (y_add * movement_speed));				
+			if(World.getWorld().physics.allow_gravity) target.getUnclonedLocation().add((x_add * movement_speed * smoothness), (y_add * movement_speed));
+			else target.getUnclonedLocation().add((x_add * fly_movement_speed * smoothness), (y_add * fly_movement_speed));
 			x_add=0;
 			y_add=0;
 		}
+		target.getUnclonedLocation().add(x_velocity, y_velocity);
+		if(x_velocity > 0f) x_velocity -= 0.1f;
+		else if(x_velocity < 0f) x_velocity += 0.1f;
+		if(y_velocity > 0f) y_velocity -= 0.1f;
+		else if(y_velocity < 0f) y_velocity += 0.1f;
 		if(target.getColission().m_col.m5 == true && target.getColission().m_col.m4 == false) target.getUnclonedLocation().setFixYtoRaster();
 		applyJump();
 	}
 	
 	
-	private boolean isJumping = false;
-	private float jumpStrength = 5.7f;
-	private float cur_jump_strength = 0f;
+	private float cur_jump_strength = 0f; 
 	private void applyJump() {
 		if(isJumping) {
 			if(target.getColission().t_col.t1 == true || target.getColission().t_col.t2 == true) {
@@ -101,7 +111,7 @@ public class EntityMovement {
 			}
 			if(cur_jump_strength != jumpStrength) {
 				target.setFallDistance(0d);
-				cur_jump_strength += 0.2f;
+				cur_jump_strength += 0.1f;
 				target.getUnclonedLocation().add(0d, (double)-(jumpStrength - cur_jump_strength));
 			}else resetJumpSettings();
 			if(target.isOnGround() == true && cur_jump_strength >= 0.6f) resetJumpSettings();
@@ -119,7 +129,10 @@ public class EntityMovement {
 	}
 	
 	public void addGravity(double gravity) {
-		if(allow_fall && target.isOnGround() == false) target.getUnclonedLocation().add(0d, gravity);
+		if(allow_fall && target.isOnGround() == false) {
+			target.getUnclonedLocation().add(0d, gravity);
+			target.getColission().isCollidingButtom();
+		}
 	}
 	
 }
