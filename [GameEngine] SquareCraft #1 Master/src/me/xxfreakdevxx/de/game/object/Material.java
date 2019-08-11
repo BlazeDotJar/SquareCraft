@@ -7,7 +7,8 @@ public enum Material {
 	DIRT(2, "dirt", "Dreck", true, "/assets/textures/block/dirt_2.png", ""),
 	GRASS(3, "gras", "Gras", true, "/assets/textures/block/grass_2.png", ""),
 	SAND(4, "sand", "Sand", true, "/assets/textures/block/sand.png", ""),
-	IRON_ORE(4, "eisenerz", "Eisenerz", true, "/assets/textures/block/iron_ore.png", "");
+	IRON_ORE(4, "iron_ore", "Eisenerz", true, "/assets/textures/block/iron_ore.png", ""),
+	COAL_ORE(5, "coal_ore", "Kohleerz", true, "/assets/textures/block/coal_ore.png", "");
 	
 	int id = 0;
 	String name, displayname, filepath, audiofilepath;

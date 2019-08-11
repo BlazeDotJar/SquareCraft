@@ -24,10 +24,13 @@ public abstract class Entity extends GameObject {
 	protected double fall_distance = 0d;
 	protected boolean isOnGround = false;
 	public boolean noclip = false;
+	public boolean flipTextureLeft = true;
+	public boolean flipTextureRight = true;
 	
 	protected ColissionDetector colission = null;
-	protected EntityMovement movement = null;
+	public EntityMovement movement = null;
 	protected World world = null;
+	
 	
 	public Entity(ID id, Location location, int width, int height, double health) {
 		super(id, location, width, height);

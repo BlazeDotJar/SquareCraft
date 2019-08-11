@@ -42,6 +42,8 @@ public class Playstate extends GameState {
 		g.setColor(Color.BLACK);
 		g.drawString("FPS: "+SquareCraft.fps_current+" Camera X/Y: "+SquareCraft.getCamera().getX()+"/"+SquareCraft.getCamera().getY(), 10, 10);
 		g.drawString("Status WORLD: "+world.status, 10, 40);
+		g.drawString("Entities: "+world.entities.size(), 10, 70);
+		g.drawString("isWalkingLeft: "+world.player.getMovement().isWalkingLeft+" isIdling: "+world.player.getMovement().isIdling, 10, 100);
 		WAILA.displayBlock(g);
 	}
 	@Override

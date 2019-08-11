@@ -1,0 +1,10 @@
+#Versionen und deren Bedeutung
+#
+# Format:
+# Example:
+# v1.1.43
+# 1: Release
+# 1: Funktion
+# 43: Variante
+Version:
+  1.1.43: 'Entity Collision wurde am Beispiel eines 'Zombies'(mit Gras Texture) programmiert'

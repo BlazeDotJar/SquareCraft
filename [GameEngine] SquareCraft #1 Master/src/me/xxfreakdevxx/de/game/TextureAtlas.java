@@ -34,10 +34,15 @@ public class TextureAtlas {
 			Material material = Material.values()[i];
 			textures.put(material.getName(), loadImage(material.getFilePath()));
 		}
-		textures.put("welt-bg", loadImage("/assets/textures/welt-bg.jpg"));	
-		textures.put("sand_vein_1", loadImage("/assets/textures/vein/sand_vein_1.png"));	
-		textures.put("sand_vein_2", loadImage("/assets/textures/vein/sand_vein_2.png"));	
-		textures.put("sand_vein_3", loadImage("/assets/textures/vein/sand_vein_3.png"));	
+		textures.put("welt-bg", loadImage("/assets/textures/welt-bg.jpg"));
+		textures.put("sand_vein_1", loadImage("/assets/textures/vein/sand_vein_1.png"));
+		textures.put("sand_vein_2", loadImage("/assets/textures/vein/sand_vein_2.png"));
+		textures.put("sand_vein_3", loadImage("/assets/textures/vein/sand_vein_3.png"));
+		textures.put("pig", loadImage("/assets/textures/entity/pig.png"));
+		textures.put("pig_2", loadImage("/assets/textures/entity/pig_2.png"));
+		textures.put("pig_3", loadImage("/assets/textures/entity/pig_3.png"));
+		textures.put("player_anima", loadImage("/assets/textures/entity/player_anima_2.png"));
+		textures.put("pig_anima", loadImage("/assets/textures/entity/pig_anima.png"));
 	}
 	
 	public static BufferedImage getTexture(String key) {

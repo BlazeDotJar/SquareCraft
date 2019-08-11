@@ -2,8 +2,10 @@ package me.xxfreakdevxx.de.game.object;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import me.xxfreakdevxx.de.game.Location;
+import me.xxfreakdevxx.de.game.texture.GameTexture;
 
 public abstract class GameObject {
 	/* GameObject ist ein Object, das von anderen Klassen geerbt werden kann.
@@ -14,6 +16,8 @@ public abstract class GameObject {
 	public float velY = 0;
 	protected ID id;
 	protected BufferedImage texture;
+	protected GameTexture gTex = null;
+	protected Random ran = new Random();
 	
 	public GameObject(ID id, Location location, int width, int height) {
 		this.id=id;
@@ -69,5 +73,8 @@ public abstract class GameObject {
 		this.texture = texture;
 	}
 	
+	public GameTexture getGameTexture() {
+		return gTex;
+	}
 	
 }

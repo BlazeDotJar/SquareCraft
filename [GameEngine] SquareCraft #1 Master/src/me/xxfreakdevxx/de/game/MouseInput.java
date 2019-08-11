@@ -3,11 +3,13 @@ package me.xxfreakdevxx.de.game;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.environment.World.ChunkManager;
 import me.xxfreakdevxx.de.game.gamestate.GSManager.GameState;
 import me.xxfreakdevxx.de.game.gamestate.Playstate;
 import me.xxfreakdevxx.de.game.object.block.Block;
 import me.xxfreakdevxx.de.game.object.block.SandBlock;
+import me.xxfreakdevxx.de.game.object.entity.Pig;
 import me.xxfreakdevxx.de.game.object.entity.Zombie;
 
 public class MouseInput extends MouseAdapter {
@@ -30,7 +32,7 @@ public class MouseInput extends MouseAdapter {
 		mx = Location.fixToRaster(mx);
 		my = Location.fixToRaster(my);
 		GameState state = null;
-		if(SquareCraft.getInstance().gsmanager.state != null) state = SquareCraft.getInstance().gsmanager.state;
+		if(SquareCraft.getInstance().gsmanager != null && SquareCraft.getInstance().gsmanager.state != null) state = SquareCraft.getInstance().gsmanager.state;
 		if(state instanceof Playstate) {
 			Playstate ps = (Playstate)state;
 			Location loc = new Location(ps.world, mx, my);
@@ -38,7 +40,9 @@ public class MouseInput extends MouseAdapter {
 			case MouseEvent.BUTTON1:
 				if(e.isShiftDown()) {
 					ps.world.getBlockAt(loc.getLocationString()).select();
-				}else {					
+				}else if(e.isControlDown()){
+					for(int i = 0; i != 10; i++) World.getWorld().entities.add(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
+				}else {
 					Block block = ps.world.getBlockAt(loc.getLocationString());
 					if(block == null) SquareCraft.log("Mouse", "Block = null");
 					else {

@@ -1,5 +1,7 @@
 package me.xxfreakdevxx.de.game;
 
+import java.awt.Rectangle;
+
 import me.xxfreakdevxx.de.game.object.GameObject;
 
 public class Camera {
@@ -25,7 +27,11 @@ public class Camera {
 //		if(y <= 0) y = 0; /* Border Oben */
 //		if(x >= (SquareCraft.windowHeight + 16)) x = (SquareCraft.windowHeight+16); /* Border unten */
 	}
-
+	
+	public Rectangle getBounds() {
+		return new Rectangle((int)x,(int)y,SquareCraft.windowWidth, SquareCraft.windowHeight);
+	}
+	
 	public float getX() {
 		return x;
 	}

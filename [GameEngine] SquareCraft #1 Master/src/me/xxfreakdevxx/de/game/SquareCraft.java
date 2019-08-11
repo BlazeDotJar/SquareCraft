@@ -93,6 +93,13 @@ public class SquareCraft extends Canvas implements Runnable {
 		double delta = 0;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
+		
+		 long renderLastTime = System.nanoTime();
+		 double fps_maximal = 60.0;//MAX FPS
+		 boolean infiniteFps = true;
+		 double renderNs = 1000000000/fps_maximal;
+		 double renderDelta = 0;
+		
 		while(isRunning) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
@@ -103,8 +110,19 @@ public class SquareCraft extends Canvas implements Runnable {
 				delta--;
 			}
 			
-			render();
-			frames++;
+			if(infiniteFps) {
+				render();
+				frames++;
+			}else {
+				now = System.nanoTime();
+				renderDelta += (now - renderLastTime) / renderNs;
+				renderLastTime = now;
+				while(isRunning && renderDelta >= 1){
+					render();
+					frames++;
+					renderDelta--;
+				}				
+			}
 			
 			if(System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
@@ -177,5 +195,21 @@ public class SquareCraft extends Canvas implements Runnable {
 		for(String s : strings) {
 			System.out.println("["+SquareCraft.getTimeInString()+"]["+prefix+"] "+s);
 		}
+	}
+	public static boolean isLocInOnScrren(double x, double y) {
+		if(x >= SquareCraft.getCamera().getX(false) && x <= SquareCraft.getCamera().getX(false)+SquareCraft.windowWidth) {
+			if(y >= SquareCraft.getCamera().getY(false) && y <= SquareCraft.getCamera().getY(false)+SquareCraft.windowHeight) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean isLocInOnScrren(int x, int y) {
+		if(x >= SquareCraft.getCamera().getX(false) && x <= SquareCraft.getCamera().getX(false)+SquareCraft.windowWidth) {
+			if(y >= SquareCraft.getCamera().getY(false) && y <= SquareCraft.getCamera().getY(false)+SquareCraft.windowHeight) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

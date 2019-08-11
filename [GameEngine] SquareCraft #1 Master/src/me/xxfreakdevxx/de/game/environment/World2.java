@@ -2,6 +2,7 @@ package me.xxfreakdevxx.de.game.environment;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,42 +15,43 @@ import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.object.Material;
 import me.xxfreakdevxx.de.game.object.block.AirBlock;
 import me.xxfreakdevxx.de.game.object.block.Block;
+import me.xxfreakdevxx.de.game.object.block.CoalOreBlock;
 import me.xxfreakdevxx.de.game.object.block.DirtBlock;
 import me.xxfreakdevxx.de.game.object.block.GrassBlock;
+import me.xxfreakdevxx.de.game.object.block.IronOreBlock;
+import me.xxfreakdevxx.de.game.object.block.SandBlock;
 import me.xxfreakdevxx.de.game.object.block.StoneBlock;
-import me.xxfreakdevxx.de.game.object.entity.Entity;
 import me.xxfreakdevxx.de.game.object.entity.Player;
 import me.xxfreakdevxx.de.game.object.entity.Zombie;
 
-public class World {
+public class World2 {
 	
 	public String worldname = "overworld";
 	public String seed = "";
 	public WorldSize size = WorldSize.XX_SMALL;
 	private ConcurrentHashMap<String, Block> blocks = new ConcurrentHashMap<String, Block>();
 	public ConcurrentLinkedQueue<Zombie> zombies = new ConcurrentLinkedQueue<Zombie>();
-	public ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<Entity>();
 	public boolean isGenerating = false;
 	public boolean isGenerated = false;
 	public boolean showRaster = false;
 	public Player player = null;
 	public Physics physics = null;
 	public String status = "";
-	public static World world = null;
+	public static World2 world = null;
 	
 	public WorldGenerator generator = null;
 	
-	public World(WorldSize size) {
+	public World2(WorldSize size) {
 		this.size = size;
 		this.physics = new Physics(this); 
 		this.generator = new WorldGenerator(this);
-		World.world = this;
+		World2.world = this;
 	}
 	
 	protected int border_distance_x = 0;
 	protected int border_distance_y = 10;
 	public void regenerate() {
-		world = new World(size);
+		world = new World2(size);
 		isGenerated = false;
 		player = null;
 		blocks.clear();
@@ -157,13 +159,6 @@ public class World {
 		status = status+" LOC:"+location.getLocationString();
 		for(Zombie z : zombies) z.render(g);
 		if(player != null) player.render(g);
-		double x = 0d;
-		double y = 0d;
-		for(Entity ent : entities) {
-			x = ent.getLocation().getIntX(false);
-			y = ent.getLocation().getIntY(false);
-			if(SquareCraft.isLocInOnScrren(x, y)) ent.render(g);
-		}
 	}
 	
 	public void tick() {
@@ -187,7 +182,6 @@ public class World {
 		if(player != null) player.tick();
 		for(Zombie z : zombies) z.tick();
 		if(player != null) SquareCraft.getCamera().tick(player);
-		for(Entity ent : entities) if(ent != null) ent.tick();
 		physics.applyGravity();
 	}
 	public void listBlocks() {
@@ -203,7 +197,7 @@ public class World {
 		}
 	}
 	
-	public static World getWorld() {
+	public static World2 getWorld() {
 		return world;
 	}
 	
@@ -243,10 +237,10 @@ public class World {
 		private Program program = null;
 		private int x = 0;
 		private int y = 0;
-		private World world = null;
+		private World2 world = null;
 		public Random ran = new Random();
 		
-		public WorldGenerator(World world) {
+		public WorldGenerator(World2 world) {
 			this.world = world;
 			y = world.border_distance_y;
 			program = new FlatProgram(world);
@@ -267,9 +261,10 @@ public class World {
 			for(int x = 0; x != size.worldwidth/ChunkManager.chunksizeBlocks+1; x++) {
 				ChunkManager.claimBlocks((x));
 			}
+			new OreGenerator().generate();
 		}
 		public void buildLine(int x, int y) {
-			int height = World.getWorld().size.getHeight();
+			int height = World2.getWorld().size.getHeight();
 			int dirt_range = 1;
 			for(int i = 0; i != height-y; i++) {
 				dirt_range = randomInteger(34, 35);
@@ -299,7 +294,7 @@ public class World {
 		
 		public class SmoothProgram extends Program {
 
-			public SmoothProgram(World world) {
+			public SmoothProgram(World2 world) {
 				super(world);
 			}
 			
@@ -358,7 +353,7 @@ public class World {
 		}
 		public class FlatProgram extends Program {
 
-			public FlatProgram(World world) {
+			public FlatProgram(World2 world) {
 				super(world);
 			}
 			
@@ -420,9 +415,9 @@ public class World {
 			
 			protected HashMap<Integer, Integer> points = new HashMap<Integer, Integer>();
 			protected boolean isGenerating = false;
-			protected World world = null;
+			protected World2 world = null;
 			
-			public Program(World world) {
+			public Program(World2 world) {
 				this.world = world;
 			}
 			public abstract void generate();
@@ -433,6 +428,193 @@ public class World {
 			}
 			
 		}
+		
+		public class OreGenerator {
+			
+			private boolean sand = true;
+			private boolean iron_ore = true;
+			private boolean coal_ore = true;
+			
+			public void generate() {
+				x = randomInteger(0, world.size.worldwidth);
+				y = randomInteger(0, world.size.worldheight);
+				if(sand) new SandPreset().generate();
+				if(iron_ore) new IronOrePreset().generate();
+				if(coal_ore) new CoalOrePreset().generate();
+			}
+			
+			public abstract class OrePreset {
+				
+				protected int ore_size = 5;
+				protected int x = 0;
+				protected int y = 0;
+				protected int amount = 10;
+				protected BufferedImage vein_preset = null;
+				protected Random ran = new Random();
+				
+				public abstract void generate();
+				
+				protected void generateRandomCoord() {
+					x = randomInteger(0, world.size.worldwidth);
+					y = randomInteger(0, world.size.worldheight);
+					if(x >= world.size.worldwidth) x = world.size.worldwidth;
+					if(y >= world.size.worldheight) y = world.size.worldheight;
+				}
+				
+			}
+			
+			public class SandPreset extends OrePreset {
+				
+				private int preset_id = 1;
+				private int amountofpresets = 30;
+				private int y_height_min = 10*SquareCraft.blocksize;
+				private int y_height_max = y_height_min+20*SquareCraft.blocksize;
+				
+				@Override
+				public void generate() {
+//					preset_id = randomInteger(0, amountofpresets);
+					generatePreset();
+				}
+				
+				public void generatePreset() {
+					Location loc = null;
+					int a = 0;
+					for(int i = 0; i != amountofpresets; i++) {
+						generateRandomCoord();
+						int w = 0;
+						int h = 0;
+						switch(preset_id) {
+						case 1:
+							vein_preset = TextureAtlas.getTexture("sand_vein_2");
+							w = vein_preset.getWidth();
+							h = vein_preset.getHeight();
+							loc = new Location((world.border_distance_x+x)*SquareCraft.blocksize, (y)*SquareCraft.blocksize); 
+							
+							for(int xx = 0; xx < w; xx++) {
+								for(int yy = 0; yy < h; yy++) {
+									int pixel = vein_preset.getRGB(xx, yy);
+									int red = (pixel >> 16) & 0xff;
+									int green = (pixel >> 8) & 0xff;
+									int blue = (pixel) & 0xff;
+									
+									if(red == 0 && green == 0 && blue == 0 && ran.nextBoolean()) {
+										loc.setXY((x+xx)*SquareCraft.blocksize, (border_distance_y+y+yy)*SquareCraft.blocksize);
+										world.setBlock(new SandBlock(loc.clone()));
+										a++;
+									}
+									if(green == 255) ;
+									if(blue == 255) ;
+								}
+							}
+							
+							break;
+						}
+					}
+					System.out.println("Sand generated: "+a);
+				}
+			}
+			public class IronOrePreset extends OrePreset {
+				
+				private int preset_id = 1;
+				private int amountofpresets = 300;
+				private int y_height_min = 10*SquareCraft.blocksize;
+				private int y_height_max = y_height_min+20*SquareCraft.blocksize;
+				
+				@Override
+				public void generate() {
+//					preset_id = randomInteger(0, amountofpresets);
+					generatePreset();
+				}
+				
+				public void generatePreset() {
+					Location loc = null;
+					int a = 0;
+					int highest_y = 0;
+					for(int i = 0; i != amountofpresets; i++) {
+						generateRandomCoord();
+						switch(preset_id) {
+						case 1:
+							//TODO: 
+//							System.out.println("Chunk ID: "+(x/ChunkManager.chunksizeBlocks)+" Chunks: "+ChunkManager.getChunks().size());
+							if(ChunkManager.getChunk(x/ChunkManager.chunksizeBlocks) == null) System.out.println("Chunk == null");
+//							highest_y = 1900/SquareCraft.blocksize;
+							highest_y = (int) ChunkManager.getChunk((x/ChunkManager.chunksizeBlocks)).getHighestBlockAt((x*SquareCraft.blocksize)).getLocation().clone().getY(false);
+							System.out.println("Highest Block: "+highest_y);
+							loc = new Location((x)*SquareCraft.blocksize, (highest_y+y)*SquareCraft.blocksize); 
+							world.setBlock(new IronOreBlock(loc.clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1 < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y-1 < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(0d, -1d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y-1 < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(0d, -1d).clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1 < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1< 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1 < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new IronOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							break;
+						}
+					}
+					System.out.println("Sand generated: "+a + "Highest: "+highest_y);
+				}
+			}
+			public class CoalOrePreset extends OrePreset {
+				
+				private int preset_id = 1;
+				private int amountofpresets = 300;
+				private int y_height_min = 10*SquareCraft.blocksize;
+				private int y_height_max = y_height_min+20*SquareCraft.blocksize;
+				
+				@Override
+				public void generate() {
+//					preset_id = randomInteger(0, amountofpresets);
+					generatePreset();
+				}
+				
+				public void generatePreset() {
+					Location loc = null;
+					int a = 0;
+					int highest_y = 0;
+					for(int i = 0; i != amountofpresets; i++) {
+						generateRandomCoord();
+						switch(preset_id) {
+						case 1:
+							//TODO:
+//							System.out.println("Chunk ID: "+(x/ChunkManager.chunksizeBlocks)+" Chunks: "+ChunkManager.getChunks().size());
+							if(ChunkManager.getChunk(x/ChunkManager.chunksizeBlocks) == null) System.out.println("Chunk == null");
+//							highest_y = 1900/SquareCraft.blocksize;
+							highest_y = (int) ChunkManager.getChunk((x/SquareCraft.blocksize)).getHighestBlockAt((x*SquareCraft.blocksize)).getLocation().getY(false);
+							System.out.println("Highest Block: "+highest_y);
+							loc = new Location((x)*SquareCraft.blocksize, (highest_y+y)*SquareCraft.blocksize); 
+							world.setBlock(new CoalOreBlock(loc.clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1 < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y-1 < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(0d, -1d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y-1 < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(0d, -1d).clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x+1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(1d, 0d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1 < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1< 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x < 0 == false) && (y+1 < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(0d, 1d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							if(ran.nextBoolean() && (x-1 < 0 == false) && (y < 0 == false)) world.setBlock(new CoalOreBlock(loc.addAndConvert(-1d, 0d).clone()));
+							break;
+						}
+					}
+					System.out.println("Sand generated: "+a + "Highest: "+highest_y);
+				}
+			}
+		}
+		
 	}
 	
 	public static class GeneratorSettings {
@@ -577,10 +759,6 @@ public class World {
 					}
 				}
 				return new AirBlock(new Location(x,4));
-			}
-			
-			public void generateOres() {
-				//TODO:  
 			}
 		}
 		

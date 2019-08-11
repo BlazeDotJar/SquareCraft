@@ -7,7 +7,8 @@ public enum ID {
 	BACKGROUND(3),
 	CREATE(4),
 	BULLET(5),
-	ENEMY(6);
+	ENEMY(6),
+	PIG(7);
 	
 	private int id = 0;
 	
