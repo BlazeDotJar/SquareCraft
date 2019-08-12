@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import me.xxfreakdevxx.de.game.gamestate.GSManager;
 import me.xxfreakdevxx.de.game.gamestate.Playstate;
@@ -26,7 +27,8 @@ public class SquareCraft extends Canvas implements Runnable {
 	private Thread thread;
 	private Camera camera;
 	private TextureAtlas textureAtlas;
-	public static final int blocksize = 20;
+	public static final int blocksize = 36;
+	public static Random ran = new Random();
 	
 	//Manager, Handler, etc.
 	public KeyInput keyinput = null;
@@ -211,5 +213,17 @@ public class SquareCraft extends Canvas implements Runnable {
 			}
 		}
 		return false;
+	}
+	public static double randomDouble(double min, double max) {
+	    if (min >= max) {
+	        throw new IllegalArgumentException("max must be greater than min");
+	    }
+	    return min + (max - min) * ran.nextDouble();
+	}
+	public static int randomInteger(int min, int max) {
+	    if (min >= max) {
+	        throw new IllegalArgumentException("max must be greater than min");
+	    }
+	    return ran.nextInt((max - min) + 1) + min;
 	}
 }

@@ -47,7 +47,7 @@ public class World {
 	}
 	
 	protected int border_distance_x = 0;
-	protected int border_distance_y = 10;
+	protected int border_distance_y = 30;
 	public void regenerate() {
 		world = new World(size);
 		isGenerated = false;
@@ -154,7 +154,7 @@ public class World {
 		/* ENDE: Alte Render Methode */
 		
 		status = "Rendered Blocks: "+rendered_blocks;
-		status = status+" LOC:"+location.getLocationString();
+		status = status+" LOC:"+player.getLocation().getConvertedLocationString();
 		for(Zombie z : zombies) z.render(g);
 		if(player != null) player.render(g);
 		double x = 0d;
@@ -197,10 +197,8 @@ public class World {
 	}
 	
 	public void spawnPlayer() {
-		if(player == null) {
-			player = new Player(new Location(3*SquareCraft.blocksize, 3*SquareCraft.blocksize));
-			player.setWorld(this);
-		}
+		player = new Player(new Location(3*SquareCraft.blocksize, 3*SquareCraft.blocksize));
+		player.setWorld(this);
 	}
 	
 	public static World getWorld() {

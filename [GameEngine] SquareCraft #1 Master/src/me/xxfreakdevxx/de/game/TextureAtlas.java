@@ -38,11 +38,9 @@ public class TextureAtlas {
 		textures.put("sand_vein_1", loadImage("/assets/textures/vein/sand_vein_1.png"));
 		textures.put("sand_vein_2", loadImage("/assets/textures/vein/sand_vein_2.png"));
 		textures.put("sand_vein_3", loadImage("/assets/textures/vein/sand_vein_3.png"));
-		textures.put("pig", loadImage("/assets/textures/entity/pig.png"));
-		textures.put("pig_2", loadImage("/assets/textures/entity/pig_2.png"));
-		textures.put("pig_3", loadImage("/assets/textures/entity/pig_3.png"));
-		textures.put("player_anima", loadImage("/assets/textures/entity/player_anima_2.png"));
+		textures.put("player_anima", loadImage("/assets/textures/entity/player_anima.png"));
 		textures.put("pig_anima", loadImage("/assets/textures/entity/pig_anima.png"));
+		textures.put("healthbar", loadImage("/assets/textures/indicator/healthbar.png"));
 	}
 	
 	public static BufferedImage getTexture(String key) {

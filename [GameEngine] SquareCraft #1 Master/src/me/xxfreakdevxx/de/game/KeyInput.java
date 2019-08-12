@@ -2,6 +2,7 @@ package me.xxfreakdevxx.de.game;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import me.xxfreakdevxx.de.game.environment.World;
@@ -43,6 +44,9 @@ public class KeyInput extends KeyAdapter {
 					break;
 				case KeyEvent.VK_N:
 					World.getWorld().player.noclip = !World.getWorld().player.noclip;
+					break;
+				case KeyEvent.VK_M:
+					World.getWorld().player.damage(SquareCraft.randomDouble(0, 4));
 					break;
 				case KeyEvent.VK_1:
 					World.getWorld().player.displayname = "IchMagOmasKekse";

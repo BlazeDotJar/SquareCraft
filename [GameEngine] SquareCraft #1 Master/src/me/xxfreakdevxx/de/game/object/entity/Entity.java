@@ -3,6 +3,7 @@ package me.xxfreakdevxx.de.game.object.entity;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
@@ -30,6 +31,7 @@ public abstract class Entity extends GameObject {
 	protected ColissionDetector colission = null;
 	public EntityMovement movement = null;
 	protected World world = null;
+	protected FallDistanceManager fall_distance_manager = null;
 	
 	
 	public Entity(ID id, Location location, int width, int height, double health) {
@@ -38,6 +40,7 @@ public abstract class Entity extends GameObject {
 		this.health=health;
 		this.movement = new EntityMovement(this);
 		this.colission = new ColissionDetector(this);
+		this.fall_distance_manager = new FallDistanceManager(this);
 	}
 
 	
@@ -72,6 +75,42 @@ public abstract class Entity extends GameObject {
 		g.setColor(Color.WHITE);
 		g.drawString(displayname, (getLocation().getIntX(true)-(SquareCraft.calculateStringWidth(g.getFont(), displayname)/2)+10), getLocation().getIntY(true)-7-(int)healthbarHeight);
 	}
+	
+	/**
+	 * Fügt der Entität Schaden hinzu
+	 * @param damage
+	 * @return
+	 */
+	public boolean damage(double damage) {
+		if(health - damage < 0.1d){
+			remove();
+			world.spawnPlayer();
+			return false;
+		}else health-=damage;
+//		texture = tint(texture);
+		System.out.println("Health: "+health);
+		return true;
+	}
+	public static BufferedImage tint(BufferedImage img) {
+
+	    for (int x = 0; x < img.getWidth(); x++) {
+	        for (int y = 0; y < img.getHeight(); y++) {
+	        	if( (img.getRGB(x, y)>>24) != 0x00 ) {	        		
+	        		Color color = new Color(img.getRGB(x, y));
+	        		
+	        		// do something with the color :) (change the hue, saturation and/or brightness)
+	        		// float[] hsb = new float[3];
+	        		// Color.RGBtoHSB(color.getRed(), old.getGreen(), old.getBlue(), hsb);
+	        		
+	        		// or just call brighter to just tint it
+	        		Color brighter = new Color(1f,0f,0f,0.3f);
+	        		
+	        		img.setRGB(x, y, brighter.getRGB());
+	        	}
+	        }
+	    }
+		return img;
+	}
 
 	public Location getLocation() {
 		return location.clone();
@@ -93,7 +132,7 @@ public abstract class Entity extends GameObject {
 	}
 	
 	public double getMaxHealth() {
-		return health;
+		return maxHealth;
 	}
 
 	public void setMaxHealth(double health) {
@@ -113,6 +152,13 @@ public abstract class Entity extends GameObject {
 	}
 	
 	public void setOnGround(boolean onGround) {
+		if(isOnGround == true && onGround == false) fall_distance_manager.allowFiltering();
+		else if(isOnGround == false && onGround == true) fall_distance_manager.disableFiltering();
+		
+		if(isOnGround == false && onGround == true && fall_distance_manager.measure()) {
+			double damage = ((fall_distance-fall_distance_manager.min_distance) * world.physics.damage_per_distance);
+			damage(damage);
+		}
 		this.isOnGround = onGround;
 	}
 	
@@ -130,6 +176,51 @@ public abstract class Entity extends GameObject {
 	
 	public ColissionDetector getColission() {
 		return colission;
+	}
+	
+	public class FallDistanceManager {
+		
+		public int prev_y = -999;
+		public int cur_y = 0;
+		private Entity target = null;
+		public boolean isOnGround = false;
+		private double min_distance = 4.5d;
+		private boolean filter_highest = true;
+		
+		public FallDistanceManager(Entity target) {
+			this.target = target;
+			System.out.println("SET: "+prev_y);
+		}
+		
+		public void tick() {
+			cur_y = target.getLocation().getBlockIntY();
+			if(filter_highest) {
+				if(prev_y == -999  || target.getLocation().getBlockIntY() < prev_y) prev_y = target.getLocation().getBlockIntY();
+			}
+		}
+		
+		public boolean measure() {
+			System.out.println("Measured "+distance(cur_y, prev_y)+" Blocks");
+			if((distance(cur_y, prev_y)) >= min_distance) {
+				return true;
+			}
+			return false;
+		}
+		public void allowFiltering() {
+			System.out.println("Allowed");
+			prev_y = -999;
+			filter_highest = true;
+		}
+		public void disableFiltering() {
+			filter_highest = false;
+		}
+		public double distance(double a, double b) {
+			if(a > b) return (a-b)+1;
+			else return (b - a)+1;
+		}
+		public int distance(int a, int b) {
+			return (int) distance((double)a,(double)b);
+		}
 	}
 	
 }

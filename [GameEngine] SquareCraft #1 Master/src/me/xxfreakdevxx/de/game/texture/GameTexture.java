@@ -57,32 +57,8 @@ public class GameTexture {
 	 * 
 	 * @return
 	 */
-//	private boolean cutOutFrames() {
-//		frames = new BufferedImage[frame_amount];
-//		int id = 0;
-//		for(int x = 0; x != (image.getWidth() / width)-1; x++) {
-//			for(int y = 0; y != (image.getHeight() / height)-1; y++) {
-//				frames[id] = image.getSubimage(x*width, y*height, width, height);
-//				if(id >= frame_amount == false)	id++;
-//				else break;
-//			}
-//			if(id >= frame_amount == false) id++;
-//			else break;
-//		}
-//		System.out.println("Es wurden "+id+" Frames geladen");
-//		return true;
-//	}
 	private boolean cutOutFrames() {
 		ArrayList<BufferedImage> imgs = new ArrayList<BufferedImage>();
-		System.out.println("Y: "+image.getHeight()/height);
-		
-//		for(int y = 0; y != (image.getHeight()/height); y++) {
-//			imgs = new ArrayList<BufferedImage>();
-//			for(int x = 0; x != meta.getImageAmountInARow(y); x++) {				
-//				imgs.add(image.getSubimage(x*width, y*height, width, height));
-//			}			
-//			frames.put(y, imgs);
-//		}
 		
 		for(int y = 0; y != meta.getAmountOfRows(); y++) {
 			imgs = new ArrayList<BufferedImage>();
@@ -90,25 +66,32 @@ public class GameTexture {
 				imgs.add(image.getSubimage((int)(x*width), (int)(y*height), (int)(width), (int)(height)));
 			}
 			frames.put(y, imgs);
-			System.out.println("row: "+y + "  Frames size: "+imgs.size());
 		}
-		
-//		for(int y = 0; y != (image.getHeight()/height); y++) {
-//			imgs = new ArrayList<BufferedImage>();
-//			for(int x = 0; x != (image.getWidth()/width); x++) {
-//				
-//				imgs.add(image.getSubimage(x*width, y*height, width, height));
-//			}
-//			frames.put(y, imgs);
-//			System.out.println("row: "+y + "  Frames size: "+imgs.size());
-//		}
 		return true;
 	}
+
 	
 	/**
-	 * Gibt den nächsten Frame zurück
+	 * Speichert die Aktuelle Zeile der Frames
 	 * 
 	 * @param row
+	 * @return
+	 */
+	public GameTexture setRow(int row) {
+		this.current_row = row;
+		this.current_frame = 0;
+		return this;
+	}
+	
+	 
+	/**
+	 * 	 * nextFrame();
+	 * 
+	 * Beschreibung:
+	 *  - gibt das nächste Bild zurück und beachtet dabei,
+	 *    ob die Animation rückwärts oder vorwärts abgespielt werden soll
+	 *    
+	 * @param timed
 	 * @return
 	 */
 	private long renderLastTime = System.nanoTime();
@@ -117,7 +100,6 @@ public class GameTexture {
 	private double renderDelta = 0;
 	public BufferedImage getNextFrame(boolean timed) {
 		if(timed == false) {
-//			System.out.println("Requested Row: "+current_row);
 			
 			if(playBackwards) {
 				current_frame--;
@@ -146,51 +128,6 @@ public class GameTexture {
 			return frames.get(current_row).get(current_frame);
 		}
 	}
-	
-	/**
-	 * Speichert die Aktuelle Zeile der Frames
-	 * 
-	 * @param row
-	 * @return
-	 */
-	public GameTexture setRow(int row) {
-		this.current_row = row;
-		this.current_frame = 0;
-		return this;
-	}
-	
-	/**
-	 * nextFrame();
-	 * 
-	 * Beschreibung:
-	 *  - gibt das nächste Bild zurück und beachtet dabei,
-	 *    ob die Animation rückwärts oder vorwärts abgespielt werden soll
-	 *
-	 * @return
-	 */
-	public BufferedImage nextFrame() {
-		//Untested
-//		if(playBackwards == false) {			
-//			if(current_frame == (frame_amount-1)) current_frame = 0;
-//			current_frame ++;
-//			return frames[current_frame];
-//		}else {
-//			if(current_frame == 0) current_frame = (frame_amount-1);
-//			current_frame --;
-//			return frames[current_frame];
-//		}
-		return null;
-	}
-	
-	/**
-	 * Gibt einen Frame zurück
-	 * 
-	 * @param id
-	 * @return
-	 */
-//	public BufferedImage getFrame(int id) {
-//		return frames[id];
-//	}
 	
 	/**
 	 * 

@@ -131,28 +131,31 @@ public class EntityMovement {
 //			if(isWalkingLeft == true && isIdling == false && target.getGameTexture().current_row != 2) target.getGameTexture().setRow(2);
 //			if(isWalkingLeft == false && isIdling == false && target.getGameTexture().current_row != 3) target.getGameTexture().setRow(3);			
 //			if(isWalkingLeft == true && isIdling == false && isJumping && target.getGameTexture().current_row != 0) target.getGameTexture().setRow(0);			
-//			if(isWalkingLeft == false && isIdling == false && isJumping && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);			
-			if(target instanceof Player) {
-				if(isWalkingLeft == true && isIdling == false && target.getGameTexture().current_row != 3) target.getGameTexture().setRow(3);
-				if(isWalkingLeft == false && isIdling == false && target.getGameTexture().current_row != 2) target.getGameTexture().setRow(2);
-				
-				if(isWalkingLeft == true && isIdling == true && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);
-				if(isWalkingLeft == false && isIdling == true && target.getGameTexture().current_row != 0) target.getGameTexture().setRow(0);
-				
-				if(isWalkingLeft == false && isIdling == false && isJumping == true && target.getGameTexture().current_row != 4) target.getGameTexture().setRow(4);
-				else if(isWalkingLeft == true && isIdling == false && isJumping == true && target.getGameTexture().current_row != 5) target.getGameTexture().setRow(5);
-			}else if(target instanceof Pig) {
-				if(isWalkingLeft == false && isIdling == false && target.getGameTexture().current_row != 2) target.getGameTexture().setRow(2);
-				if(isWalkingLeft == true && isIdling == false && target.getGameTexture().current_row != 3) target.getGameTexture().setRow(3);
-				
-				if(isWalkingLeft == true && isIdling == true && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);
-				if(isWalkingLeft == false && isIdling == true && target.getGameTexture().current_row != 0) target.getGameTexture().setRow(0);
-			}
+//			if(isWalkingLeft == false && isIdling == false && isJumping && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);
+			setGameTextureData();
 		}
 		x_add=0;
 		y_add=0;
 	}
 	
+	public void setGameTextureData() {
+		if(target instanceof Player) {
+			if(isWalkingLeft == true && isIdling == false && target.getGameTexture().current_row != 3) target.getGameTexture().setRow(3);
+			if(isWalkingLeft == false && isIdling == false && target.getGameTexture().current_row != 2) target.getGameTexture().setRow(2);
+			
+			if(isWalkingLeft == true && isIdling == true && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);
+			if(isWalkingLeft == false && isIdling == true && target.getGameTexture().current_row != 0) target.getGameTexture().setRow(0);
+			
+			if(isWalkingLeft == false && isIdling == false && isJumping == true && target.getGameTexture().current_row != 4) target.getGameTexture().setRow(4);
+			else if(isWalkingLeft == true && isIdling == false && isJumping == true && target.getGameTexture().current_row != 5) target.getGameTexture().setRow(5);
+		}else if(target instanceof Pig) {
+			if(isWalkingLeft == false && isIdling == false && target.getGameTexture().current_row != 2) target.getGameTexture().setRow(2);
+			if(isWalkingLeft == true && isIdling == false && target.getGameTexture().current_row != 3) target.getGameTexture().setRow(3);
+			
+			if(isWalkingLeft == true && isIdling == true && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);
+			if(isWalkingLeft == false && isIdling == true && target.getGameTexture().current_row != 0) target.getGameTexture().setRow(0);
+		}
+	}
 	
 	private float cur_jump_strength = 0f; 
 	private void applyJump() {
