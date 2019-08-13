@@ -31,4 +31,9 @@ public class AirBlock extends Block {
 	public void tick() {
 		
 	}
+	@Override
+	public void interact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

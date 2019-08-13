@@ -32,4 +32,9 @@ public class StoneBlock extends Block {
 	public void tick() {
 		
 	}
+	@Override
+	public void interact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

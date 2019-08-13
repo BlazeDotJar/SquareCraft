@@ -24,6 +24,7 @@ public abstract class Block extends GameObject {
 	
 	public abstract void tick();
 	public abstract void render(Graphics g);
+	public abstract void interact();
 	
 	public Material getMaterial() {
 		return material;

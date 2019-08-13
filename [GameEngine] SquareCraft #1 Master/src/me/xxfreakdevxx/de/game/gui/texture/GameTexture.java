@@ -1,4 +1,4 @@
-package me.xxfreakdevxx.de.game.texture;
+package me.xxfreakdevxx.de.game.gui.texture;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
+import me.xxfreakdevxx.de.game.TextureAtlas;
 
 public class GameTexture {
 	
@@ -178,6 +179,7 @@ public class GameTexture {
 		static Scanner scanner;
 		
 		public static void loadMeta(ImageMeta meta, String meta_path) {
+			meta_path = meta_path.replace("{RESOURCE_PACK}", TextureAtlas.resource_pack_name);
 			
 			HashMap<Integer, Integer> data = new HashMap<Integer, Integer>();
 //			scanner = new Scanner(TextureAtlas.class.getResource(meta_path).getFile().get);

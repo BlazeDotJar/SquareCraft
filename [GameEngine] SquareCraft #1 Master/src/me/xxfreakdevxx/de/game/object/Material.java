@@ -3,12 +3,13 @@ package me.xxfreakdevxx.de.game.object;
 public enum Material {
 	
 	AIR(0, "air", "Luft", false, "", ""),
-	STONE(1, "stone", "Stein", true, "/assets/textures/block/stone_2.png", ""),
-	DIRT(2, "dirt", "Dreck", true, "/assets/textures/block/dirt_2.png", ""),
-	GRASS(3, "gras", "Gras", true, "/assets/textures/block/grass_2.png", ""),
-	SAND(4, "sand", "Sand", true, "/assets/textures/block/sand.png", ""),
-	IRON_ORE(4, "iron_ore", "Eisenerz", true, "/assets/textures/block/iron_ore.png", ""),
-	COAL_ORE(5, "coal_ore", "Kohleerz", true, "/assets/textures/block/coal_ore.png", "");
+	STONE(1, "stone", "Stein", true, "/assets/{RESOURCE_PACK}/textures/block/stone_2.png", ""),
+	DIRT(2, "dirt", "Dreck", true, "/assets/{RESOURCE_PACK}/textures/block/dirt_2.png", ""),
+	GRASS(3, "gras", "Gras", true, "/assets/{RESOURCE_PACK}/textures/block/grass_2.png", ""),
+	SAND(4, "sand", "Sand", true, "/assets/{RESOURCE_PACK}/textures/block/sand.png", ""),
+	IRON_ORE(4, "iron_ore", "Eisenerz", true, "/assets/{RESOURCE_PACK}/textures/block/iron_ore.png", ""),
+	COAL_ORE(5, "coal_ore", "Kohleerz", true, "/assets/{RESOURCE_PACK}/textures/block/coal_ore.png", ""),
+	TNT(6, "tnt", "Sprengstoff", true, "/assets/{RESOURCE_PACK}/textures/block/tnt.png", "");
 	
 	int id = 0;
 	String name, displayname, filepath, audiofilepath;

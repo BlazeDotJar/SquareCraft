@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
@@ -88,7 +90,6 @@ public abstract class Entity extends GameObject {
 			return false;
 		}else health-=damage;
 //		texture = tint(texture);
-		System.out.println("Health: "+health);
 		return true;
 	}
 	public static BufferedImage tint(BufferedImage img) {
@@ -189,7 +190,6 @@ public abstract class Entity extends GameObject {
 		
 		public FallDistanceManager(Entity target) {
 			this.target = target;
-			System.out.println("SET: "+prev_y);
 		}
 		
 		public void tick() {
@@ -200,14 +200,12 @@ public abstract class Entity extends GameObject {
 		}
 		
 		public boolean measure() {
-			System.out.println("Measured "+distance(cur_y, prev_y)+" Blocks");
 			if((distance(cur_y, prev_y)) >= min_distance) {
 				return true;
 			}
 			return false;
 		}
 		public void allowFiltering() {
-			System.out.println("Allowed");
 			prev_y = -999;
 			filter_highest = true;
 		}

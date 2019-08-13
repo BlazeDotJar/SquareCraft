@@ -8,7 +8,8 @@ public enum ID {
 	CREATE(4),
 	BULLET(5),
 	ENEMY(6),
-	PIG(7);
+	PIG(7),
+	CHICKEN(8);
 	
 	private int id = 0;
 	

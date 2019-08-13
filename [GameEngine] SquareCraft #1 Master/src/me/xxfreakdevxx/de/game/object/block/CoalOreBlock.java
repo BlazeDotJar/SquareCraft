@@ -32,4 +32,9 @@ public class CoalOreBlock extends Block {
 	public void tick() {
 		
 	}
+	@Override
+	public void interact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

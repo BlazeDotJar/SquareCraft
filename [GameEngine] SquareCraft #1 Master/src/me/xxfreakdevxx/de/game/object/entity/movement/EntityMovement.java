@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.object.block.Block;
+import me.xxfreakdevxx.de.game.object.entity.Chicken;
 import me.xxfreakdevxx.de.game.object.entity.Entity;
 import me.xxfreakdevxx.de.game.object.entity.Pig;
 import me.xxfreakdevxx.de.game.object.entity.Player;
@@ -148,7 +149,7 @@ public class EntityMovement {
 			
 			if(isWalkingLeft == false && isIdling == false && isJumping == true && target.getGameTexture().current_row != 4) target.getGameTexture().setRow(4);
 			else if(isWalkingLeft == true && isIdling == false && isJumping == true && target.getGameTexture().current_row != 5) target.getGameTexture().setRow(5);
-		}else if(target instanceof Pig) {
+		}else if(target instanceof Pig || target instanceof Chicken) {
 			if(isWalkingLeft == false && isIdling == false && target.getGameTexture().current_row != 2) target.getGameTexture().setRow(2);
 			if(isWalkingLeft == true && isIdling == false && target.getGameTexture().current_row != 3) target.getGameTexture().setRow(3);
 			

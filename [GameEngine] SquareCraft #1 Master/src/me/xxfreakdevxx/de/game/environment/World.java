@@ -114,8 +114,8 @@ public class World {
 		height_blocks_amount = (int)(SquareCraft.windowHeight / SquareCraft.blocksize);
 		
 		/* Alte Render Methode */
-		for(int x = -1; x != width_blocks_amount+1; x++) {
-			for(int y = -1; y != height_blocks_amount+1; y++) {
+		for(int x = -1; x != width_blocks_amount+2; x++) {
+			for(int y = -1; y != height_blocks_amount+2; y++) {
 				x_r = (int)(cam.getX()+(x*bsize));
 				y_r = (int)(cam.getY()+(y*bsize));
 				x_r = Location.fixToRaster(x_r);
@@ -154,7 +154,7 @@ public class World {
 		/* ENDE: Alte Render Methode */
 		
 		status = "Rendered Blocks: "+rendered_blocks;
-		status = status+" LOC:"+player.getLocation().getConvertedLocationString();
+		status = status+" LOC:"+player.getLocation().getLocationString();
 		for(Zombie z : zombies) z.render(g);
 		if(player != null) player.render(g);
 		double x = 0d;

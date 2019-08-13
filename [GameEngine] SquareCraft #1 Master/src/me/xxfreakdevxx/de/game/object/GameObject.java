@@ -3,9 +3,11 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.xxfreakdevxx.de.game.Location;
-import me.xxfreakdevxx.de.game.texture.GameTexture;
+import me.xxfreakdevxx.de.game.gui.texture.GameTexture;
 
 public abstract class GameObject {
 	/* GameObject ist ein Object, das von anderen Klassen geerbt werden kann.
@@ -18,6 +20,8 @@ public abstract class GameObject {
 	protected BufferedImage texture;
 	protected GameTexture gTex = null;
 	protected Random ran = new Random();
+	protected Timer timer;
+	protected TimerTask task;
 	
 	public GameObject(ID id, Location location, int width, int height) {
 		this.id=id;

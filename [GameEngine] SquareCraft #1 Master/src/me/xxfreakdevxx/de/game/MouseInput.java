@@ -7,8 +7,10 @@ import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.environment.World.ChunkManager;
 import me.xxfreakdevxx.de.game.gamestate.GSManager.GameState;
 import me.xxfreakdevxx.de.game.gamestate.Playstate;
+import me.xxfreakdevxx.de.game.object.Material;
 import me.xxfreakdevxx.de.game.object.block.Block;
-import me.xxfreakdevxx.de.game.object.block.SandBlock;
+import me.xxfreakdevxx.de.game.object.block.TNTBlock;
+import me.xxfreakdevxx.de.game.object.entity.Chicken;
 import me.xxfreakdevxx.de.game.object.entity.Pig;
 import me.xxfreakdevxx.de.game.object.entity.Zombie;
 
@@ -54,11 +56,16 @@ public class MouseInput extends MouseAdapter {
 			case MouseEvent.BUTTON3:
 				Zombie zombie = new Zombie(new Location(ps.world, mx, my), 20d);
 				zombie.setWorld(ps.world);
-				if(e.isControlDown()) ps.world.zombies.add(zombie);
-				else {
-					Block block = new SandBlock(new Location(ps.world,mx,my));
+				if(e.isControlDown()) for(int i = 0; i != 10; i++) World.getWorld().entities.add(new Chicken(loc.add(i*SquareCraft.blocksize, 0).clone()));
+				else if(e.isAltDown()){
+					Block block = new TNTBlock(new Location(ps.world,mx,my));
 					if(ps.world.setBlock(block))
 						ChunkManager.getChunk((int)(block.getLocation().getIntX(false)/ChunkManager.chunksizePixels)).setBlock(block);
+				}else {
+					Block b = World.getWorld().getBlockAt(loc.getLocationString());
+					if(b.getMaterial() == Material.TNT) {
+						b.interact();
+					}
 				}
 				break;
 			case MouseEvent.BUTTON2:

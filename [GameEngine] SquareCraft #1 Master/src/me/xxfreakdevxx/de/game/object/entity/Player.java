@@ -5,22 +5,22 @@ import java.awt.Graphics;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.TextureAtlas;
+import me.xxfreakdevxx.de.game.gui.texture.GameTexture;
 import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.entity.health.HealthIndicator;
 import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
-import me.xxfreakdevxx.de.game.texture.GameTexture;
 
 public class Player extends Entity {
 	
 	private HealthIndicator h_bar = null;
 	
 	public Player(Location location) {
-		super(ID.PLAYER, location, 28, 40, 20.0d);
+		super(ID.PLAYER, location, 24, 36, 2000.0d);
 //		super(ID.PLAYER, location, 15, 45, 20.0d);
 		this.displayname = "L E A";
 		this.movement.isPlayer = true;
 		this.texture = TextureAtlas.getTexture("player_anima");
-		this.gTex = new GameTexture(texture, "/assets/textures/entity/player_anima_meta.yml", 6, 18, 22, getUnclonedLocation());
+		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/player_anima_meta.yml", 6, 18, 22, getUnclonedLocation());
 		this.gTex.fps = 240000.0;
 		this.h_bar = new HealthIndicator(this);
 	}
@@ -28,8 +28,8 @@ public class Player extends Entity {
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Color.GREEN);
-		g.draw3DRect(getLocation().getIntX(true), getLocation().getIntY(true), width, height, true);
-		g.drawImage(gTex.getNextFrame(true), getLocation().getIntX(true)+2, getLocation().getIntY(true), width, height, null);
+//		g.draw3DRect(getLocation().getIntX(true), getLocation().getIntY(true), width, height, true);
+		g.drawImage(gTex.getNextFrame(true), getLocation().getIntX(true)+2, getLocation().getIntY(true)+2, width, height, null);
 		colission.render(g);
 		renderDisplayname(g);
 		h_bar.render(g);

@@ -27,7 +27,7 @@ public class SquareCraft extends Canvas implements Runnable {
 	private Thread thread;
 	private Camera camera;
 	private TextureAtlas textureAtlas;
-	public static final int blocksize = 36;
+	public static final int blocksize = 20;
 	public static Random ran = new Random();
 	
 	//Manager, Handler, etc.

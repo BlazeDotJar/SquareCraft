@@ -12,6 +12,7 @@ public class TextureAtlas {
 	
 	private static BufferedImage image;
 	private static HashMap<String, BufferedImage> textures;
+	public static String resource_pack_name = "sphax";
 	
 	public TextureAtlas() {
 		TextureAtlas.textures=new HashMap<String, BufferedImage>();
@@ -32,15 +33,19 @@ public class TextureAtlas {
 		textures.clear();
 		for(int i = 0; i < Material.values().length; i++) {
 			Material material = Material.values()[i];
-			textures.put(material.getName(), loadImage(material.getFilePath()));
+			textures.put(material.getName(), loadImage(material.getFilePath().replace("{RESOURCE_PACK}", resource_pack_name)));
 		}
-		textures.put("welt-bg", loadImage("/assets/textures/welt-bg.jpg"));
-		textures.put("sand_vein_1", loadImage("/assets/textures/vein/sand_vein_1.png"));
-		textures.put("sand_vein_2", loadImage("/assets/textures/vein/sand_vein_2.png"));
-		textures.put("sand_vein_3", loadImage("/assets/textures/vein/sand_vein_3.png"));
-		textures.put("player_anima", loadImage("/assets/textures/entity/player_anima.png"));
-		textures.put("pig_anima", loadImage("/assets/textures/entity/pig_anima.png"));
-		textures.put("healthbar", loadImage("/assets/textures/indicator/healthbar.png"));
+		textures.put("welt-bg", loadImage("/assets/{RESOURCE_PACK}/textures/welt-bg.jpg".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("sand_vein_1", loadImage("/assets/{RESOURCE_PACK}/textures/vein/sand_vein_1.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("sand_vein_2", loadImage("/assets/{RESOURCE_PACK}/textures/vein/sand_vein_2.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("sand_vein_3", loadImage("/assets/{RESOURCE_PACK}/textures/vein/sand_vein_3.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("player_anima", loadImage("/assets/{RESOURCE_PACK}/textures/entity/player_anima.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("pig_anima", loadImage("/assets/{RESOURCE_PACK}/textures/entity/pig_anima.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("healthbar", loadImage("/assets/{RESOURCE_PACK}/textures/indicator/healthbar.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("chicken", loadImage("/assets/{RESOURCE_PACK}/textures/entity/chicken.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("explosion_large_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_large_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("explosion_medium_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_medium_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("explosion_small_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_small_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 	}
 	
 	public static BufferedImage getTexture(String key) {

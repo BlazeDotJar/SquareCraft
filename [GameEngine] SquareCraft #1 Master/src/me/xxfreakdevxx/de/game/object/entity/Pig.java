@@ -5,9 +5,9 @@ import java.awt.Graphics;
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.environment.World;
+import me.xxfreakdevxx.de.game.gui.texture.GameTexture;
 import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.entity.movement.behavior.EntityBehavior;
-import me.xxfreakdevxx.de.game.texture.GameTexture;
 
 public class Pig extends Entity {
 	
@@ -16,7 +16,7 @@ public class Pig extends Entity {
 	public Pig(Location location) {
 		super(ID.PIG, location, 28, 22, 12d);
 		texture = TextureAtlas.getTexture("pig_anima");
-		this.gTex = new GameTexture(texture, "/assets/textures/entity/pig_anima_meta.yml", 6, 40, 34, getUnclonedLocation());
+		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/pig_anima_meta.yml", 6, 40, 34, getUnclonedLocation());
 		this.gTex.fps = 2.0;
 		setWorld(World.getWorld());
 		behav = new EntityBehavior(this);

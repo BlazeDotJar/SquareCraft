@@ -1,4 +1,4 @@
-package me.xxfreakdevxx.de.game.texture;
+package me.xxfreakdevxx.de.game.gui.texture;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

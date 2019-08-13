@@ -13,6 +13,7 @@ public class ColissionDetector {
 	
 	public Entity target = null;
 	public SquareCraft scraft = null;
+	public boolean render_cols = false;
 	
 	public LeftColission l_col = new LeftColission();
 	public RightColission r_col = new RightColission();
@@ -143,7 +144,7 @@ public class ColissionDetector {
 			cols.remove("t1");
 			cols.remove("t2");
 			//t1
-			x = target.getLocation().getIntX(false) + (target.width / 3) ;
+			x = target.getLocation().getIntX(false);
 			y = target.getLocation().getIntY(false) - 1;
 			cols.put("t1", x+":"+y);
 			test_loc = new Location(x,y);
@@ -151,7 +152,7 @@ public class ColissionDetector {
 			if(target.getWorld().getBlockAt(test_loc.getLocationString()).getMaterial().isSolid()) t_col.t1 = true;
 			else t_col.t1 = false;
 			//t2
-			x = target.getLocation().getIntX(false) + (target.width / 3) * 2;
+			x = target.getLocation().getIntX(false) + (target.width);
 			y = target.getLocation().getIntY(false) - 1;
 			cols.put("t2", x+":"+y);
 			test_loc2 = new Location(x,y);
@@ -263,11 +264,13 @@ public class ColissionDetector {
 	
 	String[] ar = "".split(":");
 	public void render(Graphics g) {
-		g.setColor(Color.RED);
-		
-		for(String s : cols.values()) {
-			ar = s.split(":");
-			g.fillRect(Integer.parseInt(ar[0])-SquareCraft.getCamera().getX(false), Integer.parseInt(ar[1])-SquareCraft.getCamera().getY(false), 2, 2);
+		if(render_cols) {			
+			g.setColor(Color.RED);
+			
+			for(String s : cols.values()) {
+				ar = s.split(":");
+				g.fillRect(Integer.parseInt(ar[0])-SquareCraft.getCamera().getX(false), Integer.parseInt(ar[1])-SquareCraft.getCamera().getY(false), 2, 2);
+			}
 		}
 	}
 	
