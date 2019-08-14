@@ -61,6 +61,7 @@ public class World {
 		SquareCraft.log("World", "Generating World");
 		isGenerating = true;
 		generator.generate();
+		AnimalSpawner.spreadAnimals();
 //		SquareCraft.log("World", "Generated Blocks: "+blocks.keySet().toString());
 		status = "World is generated";
 		isGenerating = false;

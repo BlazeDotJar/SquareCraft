@@ -2,12 +2,13 @@ package me.xxfreakdevxx.de.game;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.environment.World.ChunkManager;
 import me.xxfreakdevxx.de.game.gamestate.Playstate;
+import me.xxfreakdevxx.de.game.inventory.ItemStack;
+import me.xxfreakdevxx.de.game.object.Material;
 import me.xxfreakdevxx.de.game.object.block.Block;
 import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
 
@@ -27,6 +28,12 @@ public class KeyInput extends KeyAdapter {
 		if(World.getWorld() != null && World.getWorld().isGenerated) {			
 			for(int key : pressed_keys) {
 				switch(key) {
+				case KeyEvent.VK_0:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.TNT));
+					break;
+				case KeyEvent.VK_9:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.SAND));
+					break;
 				case KeyEvent.VK_RIGHT:
 					SquareCraft.getCamera().addX(1);
 					break;

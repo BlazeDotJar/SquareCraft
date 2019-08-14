@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.gui.texture.GameTexture;
+import me.xxfreakdevxx.de.game.inventory.Inventory;
 import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.entity.health.HealthIndicator;
 import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
@@ -13,6 +14,7 @@ import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
 public class Player extends Entity {
 	
 	private HealthIndicator h_bar = null;
+	public Inventory inventory = null;
 	
 	public Player(Location location) {
 		super(ID.PLAYER, location, 24, 36, 2000.0d);
@@ -23,6 +25,7 @@ public class Player extends Entity {
 		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/player_anima_meta.yml", 6, 18, 22, getUnclonedLocation());
 		this.gTex.fps = 240000.0;
 		this.h_bar = new HealthIndicator(this);
+		this.inventory = new Inventory(16, 4);
 	}
 
 	@Override
@@ -33,6 +36,7 @@ public class Player extends Entity {
 		colission.render(g);
 		renderDisplayname(g);
 		h_bar.render(g);
+		if(inventory != null) inventory.render(g);
 	}
 
 	@Override
@@ -47,6 +51,7 @@ public class Player extends Entity {
 
 	@Override
 	public void tick() {
+		inventory.tick();
 		fall_distance_manager.tick();
 		h_bar.tick();
 		if(noclip == false) {			

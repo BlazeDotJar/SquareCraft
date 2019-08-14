@@ -45,25 +45,27 @@ public class TNTBlock extends Block {
 	}
 	@Override
 	public void interact() {
-		color = new Color(1f,1f,1f,0.3f);
-		isFused = true;
-		task = new TimerTask() {
-			int count = 0;
-			@Override
-			public void run() {
-				if(count != blastDelay) {
-					isFused = !isFused;
-				}else {
-					World.getWorld().removeBlock(location.getLocationString());
-					new Explosion(getLocation());
-					timer.cancel();
-					task.cancel();
+		if(task == null && timer == null) {
+			color = new Color(1f,1f,1f,0.3f);
+			isFused = true;
+			task = new TimerTask() {
+				int count = 0;
+				@Override
+				public void run() {
+					if(count != blastDelay) {
+						isFused = !isFused;
+					}else {
+						World.getWorld().removeBlock(location.getLocationString());
+						new Explosion(getLocation());
+						timer.cancel();
+						task.cancel();
+					}
+					count++;
 				}
-				count++;
-			}
-		};
-		timer = new Timer();
-		timer.schedule(task, 0, blastPeroid);
+			};
+			timer = new Timer();
+			timer.schedule(task, 0, blastPeroid);
+		}
 
 	}
 }

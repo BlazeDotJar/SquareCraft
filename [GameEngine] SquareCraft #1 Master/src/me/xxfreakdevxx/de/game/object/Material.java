@@ -1,5 +1,9 @@
 package me.xxfreakdevxx.de.game.object;
 
+import java.awt.image.BufferedImage;
+
+import me.xxfreakdevxx.de.game.TextureAtlas;
+
 public enum Material {
 	
 	AIR(0, "air", "Luft", false, "", ""),
@@ -7,9 +11,9 @@ public enum Material {
 	DIRT(2, "dirt", "Dreck", true, "/assets/{RESOURCE_PACK}/textures/block/dirt_2.png", ""),
 	GRASS(3, "gras", "Gras", true, "/assets/{RESOURCE_PACK}/textures/block/grass_2.png", ""),
 	SAND(4, "sand", "Sand", true, "/assets/{RESOURCE_PACK}/textures/block/sand.png", ""),
-	IRON_ORE(4, "iron_ore", "Eisenerz", true, "/assets/{RESOURCE_PACK}/textures/block/iron_ore.png", ""),
-	COAL_ORE(5, "coal_ore", "Kohleerz", true, "/assets/{RESOURCE_PACK}/textures/block/coal_ore.png", ""),
-	TNT(6, "tnt", "Sprengstoff", true, "/assets/{RESOURCE_PACK}/textures/block/tnt.png", "");
+	IRON_ORE(5, "iron_ore", "Eisenerz", true, "/assets/{RESOURCE_PACK}/textures/block/iron_ore.png", ""),
+	COAL_ORE(6, "coal_ore", "Kohleerz", true, "/assets/{RESOURCE_PACK}/textures/block/coal_ore.png", ""),
+	TNT(7, "tnt", "Sprengstoff", true, "/assets/{RESOURCE_PACK}/textures/block/tnt.png", "");
 	
 	int id = 0;
 	String name, displayname, filepath, audiofilepath;
@@ -46,6 +50,10 @@ public enum Material {
 
 	public String getSoundFilePath() {
 		return audiofilepath;
+	}
+
+	public BufferedImage getTexture() {
+		return TextureAtlas.getTexture(getName());
 	}
 	
 }
