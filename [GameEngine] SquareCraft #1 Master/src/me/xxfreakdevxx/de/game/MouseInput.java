@@ -58,6 +58,7 @@ public class MouseInput extends MouseAdapter {
 				}else if(e.isControlDown()){
 					for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
 				}else {
+					World.world.player.inventory.clicked(e.getPoint());
 					Block block = ps.world.getBlockAt(loc.getLocationString());
 					if(block == null) SquareCraft.log("Mouse", "Block = null");
 					else {
@@ -75,7 +76,6 @@ public class MouseInput extends MouseAdapter {
 					if(ps.world.setBlock(block))
 						ChunkManager.getChunk((int)(block.getLocation().getIntX(false)/ChunkManager.chunksizePixels)).setBlock(block);
 				}else {
-					World.world.player.inventory.clicked(e.getPoint());
 					Block b = World.getWorld().getBlockAt(loc.getLocationString());
 					if(b.getMaterial() == Material.TNT) {
 						b.interact();

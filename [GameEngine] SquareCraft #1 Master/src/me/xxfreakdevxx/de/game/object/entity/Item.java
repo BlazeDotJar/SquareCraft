@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import me.xxfreakdevxx.de.game.Location;
+import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.object.Material;
 
 public class Item extends Entity {
@@ -14,22 +15,21 @@ public class Item extends Entity {
 		super(location, 20, 20, 99999999D);
 		this.material = material;
 		this.texture = material.getTexture();
-		System.out.println("Location: "+location.getLocationString());
 	}
 
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.drawRect((int)location.getX(true)-1, (int)location.getY(true)-1, width+1, height+1);
-		g.drawImage(material.getTexture(), (int)location.getX(true), (int)location.getY(true), width, height, null);
+		System.out.println("X/Y: "+getUnclonedLocation().getX(true)+"");
+		g.drawRect((int)getUnclonedLocation().getX(true)-1, (int)getUnclonedLocation().getY(true)-1, width+1, height+1);
+		g.drawImage(material.getTexture(), (int)getUnclonedLocation().getX(true), (int)getUnclonedLocation().getY(true), width, height, null);
 		g.setColor(new Color(1f,1f,1f,0.1f));
-		g.fillRect((int)location.getX(true)-1, (int)location.getY(true)-1, width+1, height+1);
+		g.fillRect((int)getUnclonedLocation().getX(true)-1, (int)getUnclonedLocation().getY(true)-1, width+1, height+1);
 	}
 
 	@Override
 	public void remove() {
-		// TODO Auto-generated method stub
-		
+		World.getWorld().removeEntity(this);
 	}
 
 	@Override
@@ -41,6 +41,10 @@ public class Item extends Entity {
 	@Override
 	public void tick() {
 		movement.move();
+	}
+	
+	public Material getMaterial() {
+		return material;
 	}
 
 }
