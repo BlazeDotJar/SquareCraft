@@ -56,10 +56,9 @@ public class MouseInput extends MouseAdapter {
 				if(e.isShiftDown()) {
 					ps.world.getBlockAt(loc.getLocationString()).select();
 				}else if(e.isControlDown()){
-					for(int i = 0; i != 10; i++) World.getWorld().entities.add(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
+					for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
 				}else {
 					Block block = ps.world.getBlockAt(loc.getLocationString());
-					World.world.player.inventory.clicked(e.getPoint());
 					if(block == null) SquareCraft.log("Mouse", "Block = null");
 					else {
 						if(ps.world.removeBlock(loc.getLocationString()))
@@ -70,12 +69,13 @@ public class MouseInput extends MouseAdapter {
 			case MouseEvent.BUTTON3:
 				Zombie zombie = new Zombie(new Location(ps.world, mx, my), 20d);
 				zombie.setWorld(ps.world);
-				if(e.isControlDown()) for(int i = 0; i != 10; i++) World.getWorld().entities.add(new Chicken(loc.add(i*SquareCraft.blocksize, 0).clone()));
+				if(e.isControlDown()) for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Chicken(loc.add(i*SquareCraft.blocksize, 0).clone()));
 				else if(e.isAltDown()){
 					Block block = new TNTBlock(new Location(ps.world,mx,my));
 					if(ps.world.setBlock(block))
 						ChunkManager.getChunk((int)(block.getLocation().getIntX(false)/ChunkManager.chunksizePixels)).setBlock(block);
 				}else {
+					World.world.player.inventory.clicked(e.getPoint());
 					Block b = World.getWorld().getBlockAt(loc.getLocationString());
 					if(b.getMaterial() == Material.TNT) {
 						b.interact();

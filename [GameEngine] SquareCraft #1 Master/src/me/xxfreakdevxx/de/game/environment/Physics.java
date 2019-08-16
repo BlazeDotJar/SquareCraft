@@ -18,7 +18,7 @@ public class Physics {
 		if(allow_gravity)
 			if(gravity_strength*world.player.getFallDistance() >= gravity_max_strength) world.player.getMovement().addGravity(gravity_max_strength);
 			else world.player.getMovement().addGravity(gravity_strength * world.player.getFallDistance());
-		for(Entity ent : World.getWorld().entities) {
+		for(Entity ent : World.getWorld().getEntities()) {
 			if(gravity_strength*ent.getFallDistance() >= gravity_max_strength)
 				ent.movement.addGravity(gravity_max_strength);
 			else ent.movement.addGravity(gravity_strength * ent.getFallDistance());			

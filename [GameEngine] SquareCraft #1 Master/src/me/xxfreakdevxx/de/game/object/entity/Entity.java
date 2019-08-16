@@ -8,7 +8,6 @@ import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.object.GameObject;
-import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.entity.movement.ColissionDetector;
 import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
 
@@ -39,8 +38,9 @@ public abstract class Entity extends GameObject {
 	protected FallDistanceManager fall_distance_manager = null;
 	
 	
-	public Entity(ID id, Location location, int width, int height, double health) {
-		super(id, location, width, height);
+	public Entity(Location location, int width, int height, double health) {
+		super(location, width, height);
+		this.world = location.getWorld();
 		this.maxHealth=health;
 		this.health=health;
 		this.movement = new EntityMovement(this);
@@ -85,8 +85,6 @@ public abstract class Entity extends GameObject {
 		double total = health / one;
 		g.setColor(Color.BLACK);
 		g.fillRect(healthbarX, healthbarY, (int) healthbarPrefferedLength, (int) healthbarHeight);
-		if(getId() == ID.PLAYER) g.setColor(healthColorFriendly);
-		if(getId() == ID.ENEMY) g.setColor(healthColorEnemy);
 		g.fillRect(healthbarX, healthbarY, (int) ((int) total), (int) healthbarHeight);
 	}
 	public void renderDisplayname(Graphics g) {

@@ -3,11 +3,10 @@ package me.xxfreakdevxx.de.game.object.entity;
 import java.awt.Graphics;
 
 import me.xxfreakdevxx.de.game.Camera;
-import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.Location;
+import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.gamestate.Playstate;
-import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.Material;
 import me.xxfreakdevxx.de.game.object.block.Block;
 
@@ -17,7 +16,7 @@ public class Zombie extends Entity {
 	private Camera cam = SquareCraft.getCamera();
 	
 	public Zombie(Location location, double health) {
-		super(ID.ENEMY, location, SquareCraft.blocksize, SquareCraft.blocksize, health);
+		super(location, SquareCraft.blocksize, SquareCraft.blocksize, health);
 		texture = TextureAtlas.getTexture(Material.GRASS.getName());
 	}
 	

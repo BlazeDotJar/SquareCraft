@@ -6,7 +6,6 @@ import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.gui.texture.GameTexture;
-import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.entity.movement.behavior.EntityBehavior;
 
 public class Chicken extends Entity {
@@ -14,7 +13,7 @@ public class Chicken extends Entity {
 	private EntityBehavior behav = null;
 	
 	public Chicken(Location location) {
-		super(ID.CHICKEN, location, 26, 20, 12d);
+		super(location, 26, 20, 12d);
 		texture = TextureAtlas.getTexture("chicken");
 		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/chicken_meta.yml", 6, 47, 44, getUnclonedLocation());
 		this.gTex.fps = 2.0;
@@ -29,7 +28,7 @@ public class Chicken extends Entity {
 
 	@Override
 	public void remove() {
-		World.getWorld().entities.remove(this);
+		World.getWorld().removeEntity(this);
 	}
 
 	@Override

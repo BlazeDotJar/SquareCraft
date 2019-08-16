@@ -2,6 +2,7 @@ package me.xxfreakdevxx.de.game.environment;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,7 @@ import me.xxfreakdevxx.de.game.object.block.DirtBlock;
 import me.xxfreakdevxx.de.game.object.block.GrassBlock;
 import me.xxfreakdevxx.de.game.object.block.StoneBlock;
 import me.xxfreakdevxx.de.game.object.entity.Entity;
+import me.xxfreakdevxx.de.game.object.entity.Item;
 import me.xxfreakdevxx.de.game.object.entity.Player;
 import me.xxfreakdevxx.de.game.object.entity.Zombie;
 
@@ -27,8 +29,8 @@ public class World {
 	public String seed = "";
 	public WorldSize size = WorldSize.XX_SMALL;
 	private ConcurrentHashMap<String, Block> blocks = new ConcurrentHashMap<String, Block>();
-	public ConcurrentLinkedQueue<Zombie> zombies = new ConcurrentLinkedQueue<Zombie>();
-	public ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<Entity>();
+	private ConcurrentLinkedQueue<Zombie> zombies = new ConcurrentLinkedQueue<Zombie>();
+	private ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<Entity>();
 	public boolean isGenerating = false;
 	public boolean isGenerated = false;
 	public boolean showRaster = false;
@@ -112,7 +114,9 @@ public class World {
 	private Camera cam = SquareCraft.getCamera();//Gehört zur alten Render Methode
 	
 	private int rendered_blocks = 0;
-	private Location location = new Location(this, 0d, 0d);;
+	private Location location = new Location(this, 0d, 0d);
+	private double x_ent = 0d;
+	private double y_ent = 0d;
 	public void render(Graphics g) {
 		if(isGenerated == true) {
 			g.drawImage(TextureAtlas.getTexture("welt-bg"), 0,0, SquareCraft.windowWidth, SquareCraft.windowHeight, null);
@@ -167,12 +171,10 @@ public class World {
 		status = status+" LOC:"+player.getLocation().getLocationString();
 		for(Zombie z : zombies) z.render(g);
 		if(player != null) player.render(g);
-		double x = 0d;
-		double y = 0d;
 		for(Entity ent : entities) {
-			x = ent.getLocation().getIntX(false);
-			y = ent.getLocation().getIntY(false);
-			if(SquareCraft.isLocInOnScrren(x, y)) ent.render(g);
+			x_ent = ent.getLocation().getIntX(false);
+			y_ent = ent.getLocation().getIntY(false);
+			if(SquareCraft.isLocInOnScrren(x_ent, y_ent)) ent.render(g);
 		}
 	}
 	
@@ -216,6 +218,22 @@ public class World {
 //		player = new Player(new Location(x*blocksize, b.getLocation().getY(false) - 2*blocksize));
 		player = new Player(new Location(SquareCraft.randomInteger(60, 70)*blocksize, 0));
 		player.setWorld(this);
+	}
+	public boolean spawnEntity(Entity ent) {
+		if(entities.contains(ent) == false) {
+			if(ent instanceof Item) System.out.println("Item spawned!");
+			entities.add(ent);
+			return true;
+		}else return false;
+	}
+	public ConcurrentLinkedQueue<Entity> getEntities() {
+		return this.entities;
+	}
+	public boolean removeEntity(Entity entity) {
+		if(entities.contains(entity)) {
+			this.entities.remove(entity);
+			return true;
+		}else return false;
 	}
 	
 	public static World getWorld() {

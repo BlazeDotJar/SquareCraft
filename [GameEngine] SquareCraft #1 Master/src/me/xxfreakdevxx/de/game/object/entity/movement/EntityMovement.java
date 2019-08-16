@@ -84,6 +84,9 @@ public class EntityMovement {
 	private double smoothness = 0.0f;
 	public void move() {
 		if(pressed.isEmpty() == false) {
+			double falldistance = target.getFallDistance() ;
+			if(target.isOnGround() == false) target.setFallDistance(falldistance += 0.1);
+			else target.setFallDistance(0D);
 			ColissionDetector col = target.getColission();
 			if(move_type == 1) {
 				for(String dir : pressed) {

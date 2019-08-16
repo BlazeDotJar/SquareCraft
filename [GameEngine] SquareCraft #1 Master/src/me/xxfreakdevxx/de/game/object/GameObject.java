@@ -16,15 +16,13 @@ public abstract class GameObject {
 	public int width=32,height=32;
 	public float velX = 0;
 	public float velY = 0;
-	protected ID id;
 	protected BufferedImage texture;
 	protected GameTexture gTex = null;
 	protected Random ran = new Random();
 	protected Timer timer;
 	protected TimerTask task;
 	
-	public GameObject(ID id, Location location, int width, int height) {
-		this.id=id;
+	public GameObject(Location location, int width, int height) {
 		this.location=location;
 		this.width=width;
 		this.height=height;
@@ -35,14 +33,6 @@ public abstract class GameObject {
 	
 	public Rectangle getBounds() {
 		return new Rectangle((int)location.getIntX(true), (int)location.getIntY(true), width, height);
-	}
-
-	public ID getId() {
-		return id;
-	}
-
-	public void setId(ID id) {
-		this.id = id;
 	}
 
 	public Location getLocation() {

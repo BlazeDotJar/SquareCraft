@@ -37,13 +37,13 @@ public class Playstate extends GameState {
 	public void render(Graphics g) {
 		if(readyToRender == false) return;
 		if(world != null) world.render(g);
-		if(world == null) {			
+		if(world != null) {
 //		g.setColor(Color.RED);
 //		g.drawRect((int)(-SquareCraft.getInstance().getCamera().getX()), (int)(-SquareCraft.getInstance().getCamera().getY()), SquareCraft.windowWidth, SquareCraft.windowHeight);
 			g.setColor(Color.BLACK);
 			g.drawString("FPS: "+SquareCraft.fps_current+" Camera X/Y: "+SquareCraft.getCamera().getX()+"/"+SquareCraft.getCamera().getY(), 10, 10);
 			g.drawString("Status WORLD: "+world.status, 10, 40);
-			g.drawString("Entities: "+world.entities.size(), 10, 70);
+			g.drawString("Entities: "+world.getEntities().size(), 10, 70);
 			g.drawString("isWalkingLeft: "+world.player.getMovement().isWalkingLeft+" isIdling: "+world.player.getMovement().isIdling, 10, 100);
 		}
 		WAILA.displayBlock(g);

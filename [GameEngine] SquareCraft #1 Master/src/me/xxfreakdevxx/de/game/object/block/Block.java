@@ -7,7 +7,6 @@ import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.object.GameObject;
-import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.Material;
 
 public abstract class Block extends GameObject {
@@ -17,7 +16,7 @@ public abstract class Block extends GameObject {
 	protected Color selection_color = new Color(1f,1f,0f,0.1f);
 	protected int chunk_id = 0;
 	public Block(Material material, Location location) {
-		super(ID.BLOCK, location, SquareCraft.blocksize, SquareCraft.blocksize);
+		super(location, SquareCraft.blocksize, SquareCraft.blocksize);
 		this.material = material;
 		this.texture = TextureAtlas.getTexture(material.getName());
 	}

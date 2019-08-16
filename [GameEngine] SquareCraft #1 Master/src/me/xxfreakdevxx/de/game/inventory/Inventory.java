@@ -4,17 +4,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.MouseInput;
 import me.xxfreakdevxx.de.game.SquareCraft;
+import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.object.Material;
+import me.xxfreakdevxx.de.game.object.entity.Item;
 
 public class Inventory {
 	
 	public boolean showInventory = false;
-	private int inventory_slots_per_row = 0;
-	private int space_between_slots = 4;
 	private int slot_size = 36;
-	private int inventory_lines = 6;
+	private int space_between_slots = 4;
+	private int inventory_slots_per_row = 14;
+	private int inventory_lines = 4;
 	public int width = 0;
 	public int height = 0;
 	public int x = 0;
@@ -60,6 +63,11 @@ public class Inventory {
 			for(Slot s : slots) {
 				s.isClicked(p);
 			}
+		}else if(cursor.getItemStack() != null) {
+			if(World.getWorld().spawnEntity(new Item(
+					new Location(World.getWorld(), (p.getX())+SquareCraft.getCamera().getX(),
+							(p.getY())+SquareCraft.getCamera().getY()),
+					cursor.getItemStack().getMaterial()))) cursor.resetItemStack();
 		}
 	}
 	

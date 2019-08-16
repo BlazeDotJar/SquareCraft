@@ -7,7 +7,6 @@ import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.TextureAtlas;
 import me.xxfreakdevxx.de.game.gui.texture.GameTexture;
 import me.xxfreakdevxx.de.game.inventory.Inventory;
-import me.xxfreakdevxx.de.game.object.ID;
 import me.xxfreakdevxx.de.game.object.entity.health.HealthIndicator;
 import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
 
@@ -17,13 +16,13 @@ public class Player extends Entity {
 	public Inventory inventory = null;
 	
 	public Player(Location location) {
-		super(ID.PLAYER, location, 24, 36, 20.0d);
+		super(location, 24, 36, 20.0d);
 //		super(ID.PLAYER, location, 24, 36, 20.0d);
 		this.displayname = "L E A";
 		this.movement.isPlayer = true;
 		this.texture = TextureAtlas.getTexture("player_anima");
 		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/player_anima_meta.yml", 6, 18, 22, getUnclonedLocation());
-		this.gTex.fps = 240000.0;
+		this.gTex.fps = 24.0;
 		this.h_bar = new HealthIndicator(this);
 		this.inventory = new Inventory(16, 4);
 	}
@@ -41,7 +40,7 @@ public class Player extends Entity {
 
 	@Override
 	public void remove() {
-		world.entities.remove(this);
+		world.removeEntity(this);
 	}
 
 	@Override
@@ -62,8 +61,6 @@ public class Player extends Entity {
 			colission.isCollidingTop();
 			colission.isCollidingMiddle();
 		}
-		if(isOnGround == false) fall_distance+= 0.1;
-		else fall_distance = 0d;
 		movement.move();
 	}
 	
