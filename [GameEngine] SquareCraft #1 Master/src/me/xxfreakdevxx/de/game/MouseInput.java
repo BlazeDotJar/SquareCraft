@@ -19,6 +19,8 @@ public class MouseInput extends MouseAdapter {
 	private Camera camera = SquareCraft.getCamera();
 	public int mx = 0;
 	public int my = 0;
+	public int x_unconverted = 0;
+	public int y_unconverted = 0;
 	private static MouseInput instance = null;
 	public static MouseInput getInstance() {
 		return instance;
@@ -26,6 +28,17 @@ public class MouseInput extends MouseAdapter {
 	
 	public MouseInput() {
 		MouseInput.instance = this;
+	}
+	
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		mx = (int) (e.getX() + camera.getX());
+		my = (int) (e.getY() + camera.getY());
+		mx = Location.fixToRaster(mx);
+		my = Location.fixToRaster(my);
+		x_unconverted = e.getX();
+		y_unconverted = e.getY();
+		super.mouseMoved(e);
 	}
 	
 	public void mousePressed(MouseEvent e) {
@@ -46,6 +59,7 @@ public class MouseInput extends MouseAdapter {
 					for(int i = 0; i != 10; i++) World.getWorld().entities.add(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
 				}else {
 					Block block = ps.world.getBlockAt(loc.getLocationString());
+					World.world.player.inventory.clicked(e.getPoint());
 					if(block == null) SquareCraft.log("Mouse", "Block = null");
 					else {
 						if(ps.world.removeBlock(loc.getLocationString()))

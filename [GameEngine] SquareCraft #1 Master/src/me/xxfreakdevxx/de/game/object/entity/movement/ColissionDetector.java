@@ -3,7 +3,6 @@ package me.xxfreakdevxx.de.game.object.entity.movement;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;

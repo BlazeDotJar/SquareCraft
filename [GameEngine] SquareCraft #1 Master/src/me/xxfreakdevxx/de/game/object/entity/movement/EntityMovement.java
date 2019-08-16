@@ -30,7 +30,7 @@ public class EntityMovement {
 	public ConcurrentLinkedDeque<String> pressed = new ConcurrentLinkedDeque<String>();
 	
 	private double movement_speed = 3.5d;
-	private double fly_movement_speed = 9d;
+	public double fly_movement_speed = 9d;
 	public boolean isJumping = false; //Ist der Spieler gerade in einem Sprung?
 	private float jumpStrength = 4f; //Sprungkraft
 	
@@ -41,17 +41,13 @@ public class EntityMovement {
 	
 	public boolean pressRight() {
 		if(move_type == 1) {
-			if(pressed.contains("r") == false) {
-				pressed.add("r");
-			}
+			if(pressed.contains("r") == false) pressed.add("r");
 		}
 		return true;
 	}
 	public boolean pressLeft() {
 		if(move_type == 1) {
-			if(pressed.contains("l") == false) {
-				pressed.add("l");			
-			}
+			if(pressed.contains("l") == false) pressed.add("l");
 		}
 		return true;
 	}
@@ -126,15 +122,7 @@ public class EntityMovement {
 		
 		if(x_add == 0 && y_add == 0 && isJumping == false && y_velocity == 0 && x_velocity == 0) isIdling = true;
 		
-		if(target.getGameTexture() != null) {
-//			if(isWalkingLeft == true && isIdling == true && target.getGameTexture().current_row != 0) target.getGameTexture().setRow(0);
-//			if(isWalkingLeft == false && isIdling == true && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);
-//			if(isWalkingLeft == true && isIdling == false && target.getGameTexture().current_row != 2) target.getGameTexture().setRow(2);
-//			if(isWalkingLeft == false && isIdling == false && target.getGameTexture().current_row != 3) target.getGameTexture().setRow(3);			
-//			if(isWalkingLeft == true && isIdling == false && isJumping && target.getGameTexture().current_row != 0) target.getGameTexture().setRow(0);			
-//			if(isWalkingLeft == false && isIdling == false && isJumping && target.getGameTexture().current_row != 1) target.getGameTexture().setRow(1);
-			setGameTextureData();
-		}
+		if(target.getGameTexture() != null) setGameTextureData();
 		x_add=0;
 		y_add=0;
 	}

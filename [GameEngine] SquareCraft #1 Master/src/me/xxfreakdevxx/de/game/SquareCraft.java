@@ -18,8 +18,8 @@ import me.xxfreakdevxx.de.game.gamestate.Playstate;
 public class SquareCraft extends Canvas implements Runnable {
 	
 	/* Window */
-	public static int windowWidth = 1000;
-	public static int windowHeight = 700;
+	public static int windowWidth = 800;//1000 Default
+	public static int windowHeight = 300;//700 Default
 	
 	private boolean isRunning = false;
 	public static int fps_current = 0;
@@ -56,7 +56,7 @@ public class SquareCraft extends Canvas implements Runnable {
 		camera = new Camera(0,0);
 		this.addKeyListener(keyinput);
 		this.addMouseListener(new MouseInput());
-		this.addMouseMotionListener(new MouseMotion());
+		this.addMouseMotionListener(new MouseInput());
 		textureAtlas = new TextureAtlas();
 		gsmanager = new GSManager();
 	}

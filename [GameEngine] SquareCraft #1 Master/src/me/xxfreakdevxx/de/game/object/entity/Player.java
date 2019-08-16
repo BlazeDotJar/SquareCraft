@@ -17,8 +17,8 @@ public class Player extends Entity {
 	public Inventory inventory = null;
 	
 	public Player(Location location) {
-		super(ID.PLAYER, location, 24, 36, 2000.0d);
-//		super(ID.PLAYER, location, 15, 45, 20.0d);
+		super(ID.PLAYER, location, 24, 36, 20.0d);
+//		super(ID.PLAYER, location, 24, 36, 20.0d);
 		this.displayname = "L E A";
 		this.movement.isPlayer = true;
 		this.texture = TextureAtlas.getTexture("player_anima");
@@ -51,6 +51,7 @@ public class Player extends Entity {
 
 	@Override
 	public void tick() {
+		regenerate();
 		inventory.tick();
 		fall_distance_manager.tick();
 		h_bar.tick();

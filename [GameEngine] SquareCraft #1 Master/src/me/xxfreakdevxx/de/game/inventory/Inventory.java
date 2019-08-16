@@ -4,25 +4,28 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import me.xxfreakdevxx.de.game.MouseInput;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.object.Material;
 
 public class Inventory {
 	
+	public boolean showInventory = false;
 	private int inventory_slots_per_row = 0;
 	private int space_between_slots = 4;
 	private int slot_size = 36;
 	private int inventory_lines = 6;
-	private int width = 0;
-	private int height = 0;
+	public int width = 0;
+	public int height = 0;
+	public int x = 0;
+	public int y = 0;
 	private int distance_to_border_x = 20;
 	private int distance_to_border_y = 20;
-	private int x = 0;
-	private int y = 0;
 	private int maximal_stack_size = 999;
 	public Slot[] slots = null;
 	private Color inventory_color = new Color(0f,0.4f,1f,0.8f);
 	private TrashSlot trash = null;
+	private Cursor cursor = new Cursor();
 	
 	public Inventory() {
 		this.inventory_slots_per_row = 14;
@@ -43,12 +46,26 @@ public class Inventory {
 		int id = 0;
 		for(int l = 0; l != inventory_lines; l++) {
 			for(int r = 0; r != inventory_slots_per_row; r++) {
-				slots[id] = new Slot(this, id, new ItemStack(Material.values()[SquareCraft.randomInteger(0, Material.values().length-1)]));
+//				slots[id] = new Slot(this, id, new ItemStack(Material.values()[SquareCraft.randomInteger(0, Material.values().length-1)]));
+				slots[id] = new Slot(this, id, new ItemStack(Material.AIR));
 				slots[id].setItemStack(slots[id].getItemStack().setAmount(SquareCraft.randomInteger(0, maximal_stack_size)));
 				id++;
 			}
 		}
 		trash = new TrashSlot(this);
+	}
+	
+	public void clicked(Point p) {
+		if(isOnInventory(p)) {
+			for(Slot s : slots) {
+				s.isClicked(p);
+			}
+		}
+	}
+	
+	public boolean isOnInventory(Point p) {
+		if(p.x >= x && p.x <= x+width && p.y >= y && p.y <= y+height) return true;
+		else return false;
 	}
 	
 	public void tick() {
@@ -59,17 +76,21 @@ public class Inventory {
 			if(slot != null) slot.tick();
 		}
 		trash.tick();
+		cursor.tick();
 	}
 	
 	public void render(Graphics g) {
-		g.setColor(inventory_color);
-		g.fillRoundRect((int)(x), (int)(y), width, height, 10, 10);
-		for(int i = 0; i != slots.length; i++) {
-			Slot slot = slots[i];
-			if(slot != null) slot.render(g);
-			else System.out.println("Slot ID: "+i+" == null");
+		if(showInventory) {
+			g.setColor(inventory_color);
+			g.fillRoundRect((int)(x), (int)(y), width, height, 10, 10);
+			for(int i = 0; i != slots.length; i++) {
+				Slot slot = slots[i];
+				if(slot != null) slot.render(g);
+				else System.out.println("Slot ID: "+i+" == null");
+			}
+			trash.render(g);
+			cursor.render(g);
 		}
-		trash.render(g);
 	}
 	
 	public boolean addItem(ItemStack item) {
@@ -85,7 +106,7 @@ public class Inventory {
 	public class Slot {
 		
 		protected int id = 0;
-		protected ItemStack item = null;
+		protected ItemStack item = new ItemStack(Material.AIR);
 		protected boolean render_box = false;
 		protected boolean render_slot_id = false;
 		protected boolean isLooked = false;
@@ -98,14 +119,11 @@ public class Inventory {
 			this.inventory = inventory;
 			this.id = id;
 			this.item = item;
-			int a = id;
-			int b = 0;
-			while(a >= inventory_slots_per_row) {
-				a-=inventory_slots_per_row;
-				b++;
-			}
-			this.x = a * slot_size + ((a+1)*space_between_slots) + inventory.x;
-			this.y = b * slot_size + ((b+1)*space_between_slots) + inventory.y;
+		}
+		public Slot(Inventory inventory, int id) {
+			this.inventory = inventory;
+			this.id = id;
+			this.item = new ItemStack(Material.AIR);
 		}
 		
 		int a = id;
@@ -136,11 +154,35 @@ public class Inventory {
 			if(render_slot_id) g.drawString(""+id, x, y+10);
 		}
 		
-		public boolean isClicked(Point p) {
+		public void isClicked(Point p) {
 			if((p.x > x && p.x < (x+slot_size)) && (p.y > y && p.y < (y+slot_size))) {
-				return true;
+				
+				if(cursor.item.getMaterial() == Material.AIR && 
+						this.item.getMaterial() != Material.AIR) {
+					//Cursor: Kein Item
+					//Slot: Hat Item
+					
+					cursor.setItemStack(this.item);
+					this.item = new ItemStack(Material.AIR);
+					
+				}else if(cursor.item.getMaterial() != Material.AIR &&
+						this.item.getMaterial() == Material.AIR) {
+					//Cursor: Hat Item
+					//Slot: Kein Item
+					
+					this.item = cursor.getItemStack();					
+					cursor.setItemStack(new ItemStack(Material.AIR));
+				
+				}else if(cursor.item.getMaterial() != Material.AIR && 
+						this.item.getMaterial() != Material.AIR) {
+					//Cursor: Hat Item
+					//Slot: Hat Item
+					
+					ItemStack item = cursor.getItemStack();
+					cursor.setItemStack(this.item);
+					this.item = item;
+				}
 			}
-			return false;
 		}
 		
 		public ItemStack getItemStack() {
@@ -175,6 +217,36 @@ public class Inventory {
 			if(render_slot_id) g.drawString("trash", x, y);
 			super.render(g);
 		}
+	}
+	public class Cursor {
+		private ItemStack item = new ItemStack(Material.AIR);
+		public int x = 0;
+		public int y = 0;
+		public int size = 20;
 		
+		public Cursor() { }
+		
+		public void tick() {
+			x = (int)(MouseInput.getInstance().x_unconverted);
+			y = (int)(MouseInput.getInstance().y_unconverted);
+		}
+		
+		public void render(Graphics g) {
+			if(item.getMaterial() != Material.AIR) {
+				g.setColor(Color.BLACK);
+				g.drawRect(x-(size/2), y-(size/2), size, size);
+				g.drawImage(item.getMaterial().getTexture(), x-(size/2), y-(size/2), size, size, null);
+			}
+		}
+		
+		public ItemStack getItemStack() {
+			return item;
+		}
+		public void setItemStack(ItemStack item) {
+			this.item = item;
+		}
+		public void resetItemStack() {
+			
+		}
 	}
 }

@@ -5,11 +5,9 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import me.xxfreakdevxx.de.game.environment.World;
-import me.xxfreakdevxx.de.game.environment.World.ChunkManager;
 import me.xxfreakdevxx.de.game.gamestate.Playstate;
 import me.xxfreakdevxx.de.game.inventory.ItemStack;
 import me.xxfreakdevxx.de.game.object.Material;
-import me.xxfreakdevxx.de.game.object.block.Block;
 import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
 
 public class KeyInput extends KeyAdapter {
@@ -28,18 +26,48 @@ public class KeyInput extends KeyAdapter {
 		if(World.getWorld() != null && World.getWorld().isGenerated) {			
 			for(int key : pressed_keys) {
 				switch(key) {
-				case KeyEvent.VK_0:
-					World.getWorld().player.inventory.addItem(new ItemStack(Material.TNT));
+				case KeyEvent.VK_E:
+					World.getWorld().player.inventory.showInventory = !World.getWorld().player.inventory.showInventory;
+					release(key);
 					break;
-				case KeyEvent.VK_9:
-					World.getWorld().player.inventory.addItem(new ItemStack(Material.SAND));
+				case KeyEvent.VK_0:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[0]));
+					release(key);
+					break;
+				case KeyEvent.VK_1:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[1]));
+					release(key);
+					break;
+				case KeyEvent.VK_2:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[2]));
+					release(key);					
+					break;
+				case KeyEvent.VK_3:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[3]));
+					release(key);					
+					break;
+				case KeyEvent.VK_4:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[4]));
+					release(key);					
+					break;
+				case KeyEvent.VK_5:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[5]));
+					release(key);					
+					break;
+				case KeyEvent.VK_6:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[6]));
+					release(key);					
+					break;
+				case KeyEvent.VK_7:
+					World.getWorld().player.inventory.addItem(new ItemStack(Material.values()[7]));
+					release(key);					
 					break;
 				case KeyEvent.VK_RIGHT:
 					SquareCraft.getCamera().addX(1);
 					break;
 				case KeyEvent.VK_F:
 					World.getWorld().physics.allow_gravity = !World.getWorld().physics.allow_gravity;
-					if(World.getWorld().physics.allow_gravity){
+					if(World.getWorld().physics.allow_gravity) {
 						World.getWorld().player.setFallDistance(0d);
 						EntityMovement m = World.getWorld().player.getMovement();
 						if(m.x_add == -1) m.x_velocity -= 8f;
@@ -54,15 +82,6 @@ public class KeyInput extends KeyAdapter {
 					break;
 				case KeyEvent.VK_M:
 					World.getWorld().player.damage(SquareCraft.randomDouble(0, 4));
-					break;
-				case KeyEvent.VK_1:
-					World.getWorld().player.displayname = "IchMagOmasKekse";
-					for(Block block : ChunkManager.getChunk(1).getBlocks().values()) {
-						System.out.println("Block Type: "+block.getMaterial().getDisplayname());
-					}
-					break;
-				case KeyEvent.VK_2:
-					World.getWorld().player.displayname = "Lea";
 					break;
 				case KeyEvent.VK_G:
 					World.getWorld().regenerate();
@@ -84,7 +103,9 @@ public class KeyInput extends KeyAdapter {
 					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressUp() == false) release(key);
 					break;
 				case KeyEvent.VK_W:
-					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressUp() == false) release(key);
+					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate)
+						if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressUp() == false)
+							release(key);
 					break;
 				case KeyEvent.VK_A:
 					if(SquareCraft.getInstance().gsmanager.state instanceof Playstate) if(((Playstate)SquareCraft.getInstance().gsmanager.state).world.player.getMovement().pressLeft() == false) release(key);
@@ -122,7 +143,6 @@ public class KeyInput extends KeyAdapter {
 	}
 	public void release(int key) {
 		pressed_keys.remove(key);
-		
 		//Spieler Movement zurücksetzen
 		if(World.getWorld() != null && World.getWorld().isGenerated) {			
 			switch(key) {

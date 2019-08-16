@@ -36,6 +36,7 @@ public class World {
 	public Physics physics = null;
 	public String status = "";
 	public static World world = null;
+	public static int blocksize = SquareCraft.blocksize;
 	
 	public WorldGenerator generator = null;
 	
@@ -55,12 +56,12 @@ public class World {
 		blocks.clear();
 		ChunkManager.clearChunks();
 		generate();
-		spawnPlayer();
 	}
 	public void generate() {
 		SquareCraft.log("World", "Generating World");
 		isGenerating = true;
 		generator.generate();
+		spawnPlayer();
 		AnimalSpawner.spreadAnimals();
 //		SquareCraft.log("World", "Generated Blocks: "+blocks.keySet().toString());
 		status = "World is generated";
@@ -71,7 +72,7 @@ public class World {
 	/*
 	 * Block Methods
 	 */
-	public Block getBlockAt(String loc_string) { 
+	public Block getBlockAt(String loc_string) {
 		if(blocks.containsKey(loc_string) == false) blocks.put(loc_string, new AirBlock(new Location(loc_string)));
 		return blocks.get(loc_string);
 	}
@@ -83,8 +84,8 @@ public class World {
 		blocks.put(block.getLocation().getLocationString(), block);
 		int chunk = (int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels);
 		if(isGenerated) {
+			ChunkManager.getChunk(chunk).setBlock(block);
 			if(ChunkManager.getChunk(chunk) != null) {
-				ChunkManager.getChunk(chunk).setBlock(block);
 			}else System.out.println("Chunk = null");			
 		}
 		return true;
@@ -94,47 +95,54 @@ public class World {
 		else return false;
 		return true;
 	}
-	
+	public Block getHighestBlockAt(int x) {
+		Block block = null;
+		for(int i = 0; i != size.getHeight(); i++) {
+			block = getBlockAt(x+":"+(i*blocksize));
+			if(block.getMaterial() != Material.AIR) return block;
+		}
+		return null;
+	}	
 	private int width_blocks_amount = 0;//Wie viele Blöcke passen in die breite des Bildschirmes? //Gehört zur alten Render Methode
 	private int height_blocks_amount = 0;//Wie viele Blöcke passen in die Höhe des Bildschirmes? //Gehört zur alten Render Methode
 	private int x_r = 0;//Gehört zur alten Render Methode
 	private int y_r = 0;//Gehört zur alten Render Methode
-	private int bsize = SquareCraft.blocksize;//Gehört zur alten Render Methode
+	private int bsize = blocksize;//Gehört zur alten Render Methode
 	private Block render_block = null; //Gehört zur alten Render Methode
 	private Camera cam = SquareCraft.getCamera();//Gehört zur alten Render Methode
 	
 	private int rendered_blocks = 0;
 	private Location location = new Location(this, 0d, 0d);;
 	public void render(Graphics g) {
-		if(isGenerated == false) return;
-		g.drawImage(TextureAtlas.getTexture("welt-bg"), 0,0, SquareCraft.windowWidth, SquareCraft.windowHeight, null);
-		//Es darf keine Camera Coords addiert werden in der Render Methode!
-		//Des werden nur die Blöcke gerendert, die im Bildschirm sind
-		rendered_blocks = 0;
-		width_blocks_amount = (int)(SquareCraft.windowWidth / SquareCraft.blocksize);
-		height_blocks_amount = (int)(SquareCraft.windowHeight / SquareCraft.blocksize);
-		
-		/* Alte Render Methode */
-		for(int x = -1; x != width_blocks_amount+2; x++) {
-			for(int y = -1; y != height_blocks_amount+2; y++) {
-				x_r = (int)(cam.getX()+(x*bsize));
-				y_r = (int)(cam.getY()+(y*bsize));
-				x_r = Location.fixToRaster(x_r);
-				y_r = Location.fixToRaster(y_r);
-				location.setXY(x_r, y_r);
-				render_block = blocks.get(location.getLocationString());
-				
-				if(render_block == null) /*System.out.println("Block == null")*/;
-				else {
-					rendered_blocks++;
-					render_block.render(g);
-				}
-			}
+		if(isGenerated == true) {
+			g.drawImage(TextureAtlas.getTexture("welt-bg"), 0,0, SquareCraft.windowWidth, SquareCraft.windowHeight, null);
+			//Es darf keine Camera Coords addiert werden in der Render Methode!
+			//Des werden nur die Blöcke gerendert, die im Bildschirm sind
+			rendered_blocks = 0;
+			width_blocks_amount = (int)(SquareCraft.windowWidth / blocksize);
+			height_blocks_amount = (int)(SquareCraft.windowHeight / blocksize);
 			
-		}
-		/* ENDE: Alte Render Methode */
-		
-		/* Alte Render Methode */
+			/* Alte Render Methode */
+			for(int x = -1; x != width_blocks_amount+2; x++) {
+				for(int y = -1; y != height_blocks_amount+2; y++) {
+					x_r = (int)(cam.getX()+(x*bsize));
+					y_r = (int)(cam.getY()+(y*bsize));
+					x_r = Location.fixToRaster(x_r);
+					y_r = Location.fixToRaster(y_r);
+					location.setXY(x_r, y_r);
+					render_block = blocks.get(location.getLocationString());
+					
+					if(render_block == null) /*System.out.println("Block == null")*/;
+					else {
+						rendered_blocks++;
+						render_block.render(g);
+					}
+				}
+				
+			}
+			/* ENDE: Alte Render Methode */
+			
+			/* Alte Render Methode */
 //		for(int x = -1; x != width_blocks_amount+1; x++) {
 //			for(int y = -1; y != height_blocks_amount+1; y++) {
 //				x_r = (int)(cam.getX()+(x*bsize));
@@ -152,8 +160,9 @@ public class World {
 //			}
 //			
 //		}
-		/* ENDE: Alte Render Methode */
-		
+			/* ENDE: Alte Render Methode */
+			
+		}
 		status = "Rendered Blocks: "+rendered_blocks;
 		status = status+" LOC:"+player.getLocation().getLocationString();
 		for(Zombie z : zombies) z.render(g);
@@ -183,7 +192,6 @@ public class World {
 					block.tick();
 				}
 			}
-			
 		}
 		if(player != null) player.tick();
 		for(Zombie z : zombies) z.tick();
@@ -198,7 +206,15 @@ public class World {
 	}
 	
 	public void spawnPlayer() {
-		player = new Player(new Location(3*SquareCraft.blocksize, 3*SquareCraft.blocksize));
+//		Block b = null;
+//		int x = 0;
+//		while(b == null) {
+//			x = SquareCraft.randomInteger(0+10, size.worldwidth-10);
+//			b = getHighestBlockAt(x);	
+//			if(getHighestBlockAt(x) == null) System.out.println("BLOCK == NULL");
+//		}
+//		player = new Player(new Location(x*blocksize, b.getLocation().getY(false) - 2*blocksize));
+		player = new Player(new Location(SquareCraft.randomInteger(60, 70)*blocksize, 0));
 		player.setWorld(this);
 	}
 	
@@ -211,7 +227,7 @@ public class World {
 		XXX_SMALL(2,2),
 		XX_SMALL(9,9),
 		X_SMALL(20,10),
-		SMALL(240,180),
+		SMALL(240,200),
 		MEDIUM(100,50),
 		LARGE(1200,500),
 		X_LARGE(2600,400),
@@ -234,7 +250,7 @@ public class World {
 		}
 		public int getHeight() {
 			return worldheight;
-		}	
+		}
 	}
 	
 	public class WorldGenerator {
@@ -255,31 +271,31 @@ public class World {
 			//Schritt 1
 			program.generate();
 			for(int x : program.getPoints().keySet()) buildLine(x, program.getPoints().get(x));
-			
+
 			//Schritt 2
 			if(program instanceof SmoothProgram) ((SmoothProgram)program).smoothAll();
 			else if(program instanceof FlatProgram) ((FlatProgram)program).smoothAll();
 //			System.out.println("points: "+program.getPoints().size());
-			
 			
 			//Schritt 3
 			for(int x = 0; x != size.worldwidth/ChunkManager.chunksizeBlocks+1; x++) {
 				ChunkManager.claimBlocks((x));
 			}
 		}
+
 		public void buildLine(int x, int y) {
 			int height = World.getWorld().size.getHeight();
 			int dirt_range = 1;
 			for(int i = 0; i != height-y; i++) {
 				dirt_range = randomInteger(34, 35);
 				if(i == 0) {
-					world.setBlock(new GrassBlock(new Location(x*SquareCraft.blocksize, (y+i)*SquareCraft.blocksize)));
+					world.setBlock(new GrassBlock(new Location(x*blocksize, (y+i)*blocksize)));
 				}else if(i == 1) {
 					for(int yi = 0; yi < dirt_range; yi++) {
 						if(yi!=0) i++;
-						world.setBlock(new DirtBlock(new Location(x*SquareCraft.blocksize, (y+i)*SquareCraft.blocksize)));
+						world.setBlock(new DirtBlock(new Location(x*blocksize, (y+i)*blocksize)));
 					}
-				}else world.setBlock(new StoneBlock(new Location(x*SquareCraft.blocksize, (y+i)*SquareCraft.blocksize)));
+				}else world.setBlock(new StoneBlock(new Location(x*blocksize, (y+i)*blocksize)));
 			}
 		}
 
@@ -302,7 +318,7 @@ public class World {
 				super(world);
 			}
 			
-			private int normal_null = (SquareCraft.windowHeight)+1+((size.worldheight+border_distance_y)*SquareCraft.blocksize);
+			private int normal_null = (SquareCraft.windowHeight)+1+((size.worldheight+border_distance_y)*blocksize);
 			private int r = 0;
 			
 			@Override
@@ -361,7 +377,7 @@ public class World {
 				super(world);
 			}
 			
-			private int normal_null = (SquareCraft.windowHeight)+1+((size.worldheight+border_distance_y)*SquareCraft.blocksize);
+			private int normal_null = (SquareCraft.windowHeight)+1+((size.worldheight+border_distance_y)*blocksize);
 			private int r = 0;
 			
 			@Override
@@ -445,8 +461,8 @@ public class World {
 	public static class ChunkManager {
 		
 		public static HashMap<Integer, Chunk> chunks = new HashMap<Integer, Chunk>();
-		public static int chunksizePixels = 6*SquareCraft.blocksize;
-		public static int chunksizeBlocks = chunksizePixels / SquareCraft.blocksize;
+		public static int chunksizePixels = 6*blocksize;
+		public static int chunksizeBlocks = chunksizePixels / blocksize;
 		
 		public ChunkManager() {
 			
@@ -499,7 +515,7 @@ public class World {
 			public Chunk(int id) {
 				this.id = id;
 			}
-			public boolean removeBlock(String key)  {
+			public boolean removeBlock(String key) {
 				if(blocks.containsKey(key)) blocks.remove(key);
 				else return false;
 				return true;
@@ -520,7 +536,7 @@ public class World {
 				Block block = null;
 				for(int x = 0; x < chunksizeBlocks; x++) {
 					for(int y = 0; y < (getWorld().size.worldheight); y++) {
-						loc = new Location(x*SquareCraft.blocksize+(id*chunksizePixels), y*SquareCraft.blocksize);
+						loc = new Location(x*blocksize+(id*chunksizePixels), y*blocksize);
 						
 						block = getWorld().getBlockAt(loc.getLocationString());
 						blocks.put(loc.getLocationString(), block);
@@ -542,7 +558,7 @@ public class World {
 					g.fillRect((int)(id*chunksizePixels-SquareCraft.getCamera().getX())+2,
 							(int)(0-SquareCraft.getCamera().getY()),
 							chunksizePixels-2,
-							getWorld().size.worldheight*SquareCraft.blocksize);
+							getWorld().size.worldheight*blocksize);
 				}
 			}
 			

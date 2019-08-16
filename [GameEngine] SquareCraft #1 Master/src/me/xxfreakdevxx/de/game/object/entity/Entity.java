@@ -3,9 +3,6 @@ package me.xxfreakdevxx.de.game.object.entity;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
@@ -21,14 +18,20 @@ public abstract class Entity extends GameObject {
 	protected final int damageIndicatorCooldown = 3;
 	protected boolean showIndicator = false;
 	protected int indicatorTime = 0;
-	protected double health = 20.0D;
-	protected double maxHealth = 20.0D;
+	protected double health = 0D;
+	protected double maxHealth = 0D;
 	protected boolean isDead = false;
 	protected double fall_distance = 0d;
 	protected boolean isOnGround = false;
 	public boolean noclip = false;
 	public boolean flipTextureLeft = true;
 	public boolean flipTextureRight = true;
+	
+	/* Health Regenerating */
+	private int regenerating_ticks = 0;
+	private final int regenerating_speed = 240;
+	private int regenerating_delay = 600;
+	private boolean hasDelay = true;
 	
 	protected ColissionDetector colission = null;
 	public EntityMovement movement = null;
@@ -49,6 +52,23 @@ public abstract class Entity extends GameObject {
 	public abstract void render(Graphics g);
 	public abstract void remove();
 	public abstract void damage(double damage, Entity shooter);
+	
+	public void regenerate() {
+		if(health < maxHealth) {
+			if(hasDelay == true) {
+				if(regenerating_ticks == regenerating_delay) {				
+					hasDelay = false;
+					regenerating_ticks = 0;
+				}
+			}else regenerating_ticks++;
+			if(hasDelay == false){
+				if(regenerating_ticks == regenerating_speed) {
+					health += 1;
+					regenerating_ticks = 0;
+				}
+			}else regenerating_ticks++;
+		}
+	}
 	
 	/* Healthbar */
 	private double healthbarPrefferedLength = 100;
@@ -89,29 +109,31 @@ public abstract class Entity extends GameObject {
 			world.spawnPlayer();
 			return false;
 		}else health-=damage;
+		hasDelay = true;
+		regenerating_ticks = 0;
 //		texture = tint(texture);
 		return true;
 	}
-	public static BufferedImage tint(BufferedImage img) {
-
-	    for (int x = 0; x < img.getWidth(); x++) {
-	        for (int y = 0; y < img.getHeight(); y++) {
-	        	if( (img.getRGB(x, y)>>24) != 0x00 ) {	        		
-	        		Color color = new Color(img.getRGB(x, y));
-	        		
-	        		// do something with the color :) (change the hue, saturation and/or brightness)
-	        		// float[] hsb = new float[3];
-	        		// Color.RGBtoHSB(color.getRed(), old.getGreen(), old.getBlue(), hsb);
-	        		
-	        		// or just call brighter to just tint it
-	        		Color brighter = new Color(1f,0f,0f,0.3f);
-	        		
-	        		img.setRGB(x, y, brighter.getRGB());
-	        	}
-	        }
-	    }
-		return img;
-	}
+//	public static BufferedImage tint(BufferedImage img) {
+//
+//	    for (int x = 0; x < img.getWidth(); x++) {
+//	        for (int y = 0; y < img.getHeight(); y++) {
+//	        	if( (img.getRGB(x, y)>>24) != 0x00 ) {	        		
+////	        		Color color = new Color(img.getRGB(x, y));
+//	        		
+//	        		// do something with the color :) (change the hue, saturation and/or brightness)
+//	        		// float[] hsb = new float[3];
+//	        		// Color.RGBtoHSB(color.getRed(), old.getGreen(), old.getBlue(), hsb);
+//	        		
+//	        		// or just call brighter to just tint it
+//	        		Color brighter = new Color(1f,0f,0f,0.3f);
+//	        		
+//	        		img.setRGB(x, y, brighter.getRGB());
+//	        	}
+//	        }
+//	    }
+//		return img;
+//	}
 
 	public Location getLocation() {
 		return location.clone();
