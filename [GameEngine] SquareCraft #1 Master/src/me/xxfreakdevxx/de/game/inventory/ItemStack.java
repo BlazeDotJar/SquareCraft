@@ -27,4 +27,8 @@ public class ItemStack {
 		return this;
 	}
 	public Material getMaterial() { return material; }
+	
+	public ItemStack clone() {
+		return new ItemStack(Material.values()[material.getId()], amount);
+	}
 }

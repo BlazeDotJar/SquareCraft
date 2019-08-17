@@ -3,13 +3,16 @@ package me.xxfreakdevxx.de.game.inventory;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.MouseInput;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.object.Material;
+import me.xxfreakdevxx.de.game.object.block.Block;
 import me.xxfreakdevxx.de.game.object.entity.Item;
+import me.xxfreakdevxx.de.game.object.entity.movement.Vector;
 
 public class Inventory {
 	
@@ -25,6 +28,7 @@ public class Inventory {
 	private int distance_to_border_x = 20;
 	private int distance_to_border_y = 20;
 	private int maximal_stack_size = 999;
+	private boolean isFull = false;
 	public Slot[] slots = null;
 	private Color inventory_color = new Color(0f,0.4f,1f,0.8f);
 	private TrashSlot trash = null;
@@ -57,18 +61,59 @@ public class Inventory {
 		}
 		trash = new TrashSlot(this);
 	}
+	public void close() {
+		this.showInventory = false;
+		if(cursor.getItemStack().getMaterial() != Material.AIR) {
+			addItem(cursor.getItemStack());
+			cursor.resetItemStack();
+		}
+	}
+	public void open() {
+		this.showInventory = true;
+		
+	}
 	
-	public void clicked(Point p) {
-		if(isOnInventory(p)) {
+	private Location temp_loc = null;
+	public boolean clicked(int button, Point p, boolean isShiftDown, boolean isAltDown, boolean isControlDown) {
+		
+		if(isOnInventory(p) && button == MouseEvent.BUTTON1) {
 			for(Slot s : slots) {
 				s.isClicked(p);
 			}
-		}else if(cursor.getItemStack() != null) {
-			if(World.getWorld().spawnEntity(new Item(
-					new Location(World.getWorld(), (p.getX())+SquareCraft.getCamera().getX(),
-							(p.getY())+SquareCraft.getCamera().getY()),
-					cursor.getItemStack().getMaterial()))) cursor.resetItemStack();
+			trash.isClicked(p);
+			return true;
+		}else if(cursor.getItemStack().getMaterial() != Material.AIR && button == MouseEvent.BUTTON1 && isShiftDown == false) {
+			if(cursor.getItemStack().getMaterial().isBlock()) {
+				
+				Block b = cursor.getItemStack().getMaterial().getBlock().clone();
+				
+				b.setLocation(new Location(p.x+SquareCraft.getCamera().getX(), p.y+SquareCraft.getCamera().getY()));
+				b.setLocation(b.getLocation().fixLocationToRaster());
+				World.getWorld().setBlock(b);
+			}
+			if(cursor.getItemStack().getAmount() == 0) cursor.resetItemStack();
+			else cursor.getItemStack().setAmount(cursor.getItemStack().getAmount()-1);
+		}else if(cursor.getItemStack().getMaterial() != Material.AIR && button == MouseEvent.BUTTON1 && isShiftDown){
+			temp_loc = World.getWorld().player.getLocation();
+			Item item = null;
+			if(p.getX() < temp_loc.getX(true)) {
+				item = new Item(
+						new Location(World.getWorld(), temp_loc.getX(false)+World.getWorld().player.width/2,
+								temp_loc.getY(false)),
+						cursor.getItemStack());
+				item.addVelocity(new Vector(-3d,-3d));
+				
+			}else if(p.getX() > temp_loc.getX(true)) {
+				item = new Item(
+						new Location(World.getWorld(), temp_loc.getX(false),
+								temp_loc.getY(false)),
+						cursor.getItemStack());
+				item.addVelocity(new Vector(3d,-3d));
+			}
+			if(World.getWorld().spawnEntity(item)) {cursor.resetItemStack();}
 		}
+		if(cursor.getItemStack().getMaterial() == Material.AIR == false) return true;
+		else return false;
 	}
 	
 	public boolean isOnInventory(Point p) {
@@ -102,13 +147,34 @@ public class Inventory {
 	}
 	
 	public boolean addItem(ItemStack item) {
+		boolean addet = false;
 		for(Slot s : slots) {
-			if(s.getItemStack().getMaterial() == Material.AIR) {
-				s.setItemStack(item); 
-				return true;
+			if(s.getItemStack().getMaterial() == item.getMaterial() && s.getItemStack().getAmount() < maximal_stack_size){
+				s.getItemStack().setAmount(s.getItemStack().getAmount()+item.getAmount());
+				addet = true;
+				break;
 			}
 		}
-		return false;
+		if(addet == false) {
+			for(Slot s : slots) {
+				if(s.getItemStack().getMaterial() == Material.AIR) {
+					s.setItemStack(item); 
+					addet = true;
+					break;
+				}
+			}
+		}
+		isFull = true;
+		for(Slot s : slots) {
+			if(s.getItemStack().getMaterial() == Material.AIR) {
+				isFull = false;
+			}
+		}
+		return addet;
+	}
+	
+	public boolean isFull() {
+		return isFull;
 	}
 	
 	public class Slot {
@@ -122,16 +188,19 @@ public class Inventory {
 		protected int y = 0;
 		protected Color slot_color = new Color(0f,1f,0f,0.3f);
 		protected Inventory inventory = null;
+		protected Color forecolor = Color.BLACK;
 		
 		public Slot(Inventory inventory, int id, ItemStack item) {
 			this.inventory = inventory;
 			this.id = id;
 			this.item = item;
+			getAverageColor();
 		}
 		public Slot(Inventory inventory, int id) {
 			this.inventory = inventory;
 			this.id = id;
 			this.item = new ItemStack(Material.AIR);
+			getAverageColor();
 		}
 		
 		int a = id;
@@ -154,8 +223,8 @@ public class Inventory {
 			}
 			g.setColor(new Color(0f,0f,0f,0.3f));
 			g.drawRect(x, y, slot_size, slot_size);
-			g.setColor(Color.black);
 			if(item != null) {
+				g.setColor(forecolor);
 				g.drawImage(item.getMaterial().getTexture(), (int)(x)+1, (int)(y)+1, slot_size-1, slot_size-1, null);
 				if(item.getAmount() != 0)g.drawString(""+item.getAmount(), x+2, y+slot_size-2);
 			}
@@ -186,10 +255,46 @@ public class Inventory {
 					//Cursor: Hat Item
 					//Slot: Hat Item
 					
-					ItemStack item = cursor.getItemStack();
-					cursor.setItemStack(this.item);
-					this.item = item;
+					if(item.getMaterial() == cursor.getItemStack().getMaterial()) {
+						item.setAmount(item.getAmount()+cursor.getItemStack().getAmount());
+						if(item.getAmount() > inventory.maximal_stack_size) {
+							cursor.setItemStack(cursor.getItemStack().setAmount(inventory.maximal_stack_size - item.getAmount()));
+						}else cursor.resetItemStack();
+					}else {						
+						ItemStack item = cursor.getItemStack();
+						cursor.setItemStack(this.item);
+						this.item = item;
+					}
+					
 				}
+				
+				getAverageColor();
+			}
+		}
+		private int luminance_limit = 110;
+		public void getAverageColor() {
+			//Die Durchschnittliche Helligkeit der Texture
+			if(item != null && item.getMaterial() != Material.AIR) {				
+				int w = item.getMaterial().getTexture().getWidth();
+				int h = item.getMaterial().getTexture().getHeight();
+				double avg = 0d;
+				int count = 0;
+				for(int xx = 0; xx < w; xx++) {
+					for(int yy = 0; yy < h; yy++) {
+						if((item.getMaterial().getTexture().getRGB(xx, yy)>>24) != 0x00) {
+							int pixel = item.getMaterial().getTexture().getRGB(xx, yy);
+							int red = (pixel >> 16) & 0xff;
+							int green = (pixel >> 8) & 0xff;
+							int blue = (pixel) & 0xff;
+							double luminance = (0.2126*red) + (0.7152*green) + (0.0722*blue);
+							avg+=luminance;
+							count++;
+						}
+					}
+				}
+				avg = avg/count;
+				if(avg > luminance_limit && forecolor != Color.BLACK) forecolor = Color.BLACK;
+				else if(avg < luminance_limit && forecolor != Color.WHITE) forecolor = Color.WHITE;
 			}
 		}
 		
@@ -198,14 +303,15 @@ public class Inventory {
 		}
 		public void setItemStack(ItemStack item) {
 			this.item = item;
+			getAverageColor();
 		}
 		
 	}
 	public class TrashSlot extends Slot {
 		@Override
 		public void tick() {
-			x = inventory.x+inventory.width;
-			y = inventory.y+distance_to_border_y+(2*height);
+			x = inventory.x - slot_size;
+			y = inventory.y;
 			super.tick();
 		}
 		
@@ -221,9 +327,41 @@ public class Inventory {
 			g.setColor(Color.WHITE);
 			g.drawLine(x+10, y+10, x-10+slot_size, y-10+slot_size);
 			g.drawLine(x+10, y+slot_size-10, x+slot_size-10, y+10);
-			g.setColor(Color.black);
+			g.setColor(forecolor);
 			if(render_slot_id) g.drawString("trash", x, y);
 			super.render(g);
+		}
+		public void isClicked(Point p) {
+			if((p.x > x && p.x < (x+slot_size)) && (p.y > y && p.y < (y+slot_size))) {
+				
+				if(cursor.item.getMaterial() == Material.AIR && 
+						this.item.getMaterial() != Material.AIR) {
+					//Cursor: Kein Item
+					//Slot: Hat Item
+					
+					cursor.setItemStack(this.item);
+					this.item = new ItemStack(Material.AIR);
+					
+				}else if(cursor.item.getMaterial() != Material.AIR &&
+						this.item.getMaterial() == Material.AIR) {
+					//Cursor: Hat Item
+					//Slot: Kein Item
+					
+					this.item = cursor.getItemStack();					
+					cursor.setItemStack(new ItemStack(Material.AIR));
+				
+				}else if(cursor.item.getMaterial() != Material.AIR && 
+						this.item.getMaterial() != Material.AIR) {
+					//Cursor: Hat Item
+					//Slot: Hat Item
+					
+					this.item = cursor.getItemStack();
+					cursor.resetItemStack();
+					
+				}
+				System.out.println("Ab in Müll");
+				getAverageColor();
+			}
 		}
 	}
 	public class Cursor {
@@ -248,13 +386,13 @@ public class Inventory {
 		}
 		
 		public ItemStack getItemStack() {
-			return item;
+			return item.clone();
 		}
 		public void setItemStack(ItemStack item) {
 			this.item = item;
 		}
 		public void resetItemStack() {
-			
+			this.item = new ItemStack(Material.AIR);
 		}
 	}
 }

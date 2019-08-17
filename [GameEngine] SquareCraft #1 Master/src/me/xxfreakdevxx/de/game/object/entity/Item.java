@@ -5,24 +5,25 @@ import java.awt.Graphics;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.environment.World;
+import me.xxfreakdevxx.de.game.inventory.ItemStack;
 import me.xxfreakdevxx.de.game.object.Material;
 
 public class Item extends Entity {
 	
-	private Material material = Material.AIR;
+	private ItemStack item = null;
+	int pickupDelay = 150;
 	
-	public Item(Location location, Material material) {
-		super(location, 20, 20, 99999999D);
-		this.material = material;
-		this.texture = material.getTexture();
+	public Item(Location location, ItemStack item) {
+		super(location, 10, 10, 99999999D);
+		this.item = item;
+		this.texture = item.getMaterial().getTexture();
 	}
 
 	@Override
 	public void render(Graphics g) {
 		g.setColor(Color.BLACK);
-		System.out.println("X/Y: "+getUnclonedLocation().getX(true)+"");
 		g.drawRect((int)getUnclonedLocation().getX(true)-1, (int)getUnclonedLocation().getY(true)-1, width+1, height+1);
-		g.drawImage(material.getTexture(), (int)getUnclonedLocation().getX(true), (int)getUnclonedLocation().getY(true), width, height, null);
+		g.drawImage(item.getMaterial().getTexture(), (int)getUnclonedLocation().getX(true), (int)getUnclonedLocation().getY(true), width, height, null);
 		g.setColor(new Color(1f,1f,1f,0.1f));
 		g.fillRect((int)getUnclonedLocation().getX(true)-1, (int)getUnclonedLocation().getY(true)-1, width+1, height+1);
 	}
@@ -44,7 +45,11 @@ public class Item extends Entity {
 	}
 	
 	public Material getMaterial() {
-		return material;
+		return item.getMaterial();
+	}
+
+	public ItemStack getItemStack() {
+		return item;
 	}
 
 }

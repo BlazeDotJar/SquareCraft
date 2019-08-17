@@ -7,7 +7,7 @@ public class Location {
 	public double xCurrent;
 	public double yCurrent;
 	private double xPrev, yPrev;
-	private World world = null;
+	private World world = World.getWorld();
 	
 	public Location(String loc_string) {
 		String[] split = loc_string.split(":");

@@ -24,9 +24,12 @@ public abstract class Block extends GameObject {
 	public abstract void tick();
 	public abstract void render(Graphics g);
 	public abstract void interact();
+	public abstract void destroy();
+	public abstract Block clone();
 	
 	public Material getMaterial() {
-		return material;
+		if(material == null) return Material.AIR;
+		else return material;
 	}
 	public void select() {
 		this.showSelection = !this.showSelection;

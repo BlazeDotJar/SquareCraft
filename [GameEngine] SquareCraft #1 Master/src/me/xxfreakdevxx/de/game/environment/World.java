@@ -2,7 +2,6 @@ package me.xxfreakdevxx.de.game.environment;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +18,6 @@ import me.xxfreakdevxx.de.game.object.block.DirtBlock;
 import me.xxfreakdevxx.de.game.object.block.GrassBlock;
 import me.xxfreakdevxx.de.game.object.block.StoneBlock;
 import me.xxfreakdevxx.de.game.object.entity.Entity;
-import me.xxfreakdevxx.de.game.object.entity.Item;
 import me.xxfreakdevxx.de.game.object.entity.Player;
 import me.xxfreakdevxx.de.game.object.entity.Zombie;
 
@@ -75,13 +73,26 @@ public class World {
 	 * Block Methods
 	 */
 	public Block getBlockAt(String loc_string) {
-		if(blocks.containsKey(loc_string) == false) blocks.put(loc_string, new AirBlock(new Location(loc_string)));
+		if(blocks.get(loc_string) == null || blocks.containsKey(loc_string) == false) blocks.put(loc_string, new AirBlock(new Location(loc_string)));
 		return blocks.get(loc_string);
 	}
 	public Block getBlockAt(int x, int y) { 
 		return getBlockAt(x+":"+y);
 	}
 	public boolean setBlock(Block block) {
+		if(blocks.get(block.getLocation().getLocationString()) == null || blocks.get(block.getLocation().getLocationString()).getMaterial() == Material.AIR) {
+			blocks.put(block.getLocation().getLocationString(), block);
+			int chunk = (int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels);
+			if(isGenerated) {
+				ChunkManager.getChunk(chunk).setBlock(block);
+				if(ChunkManager.getChunk(chunk) != null) {
+				}else System.out.println("Chunk = null");			
+			}
+			return true;
+		}
+		return false;
+	}
+	public boolean replaceBlock(Block block) {
 		if(blocks.containsKey(block.getLocation().getLocationString())) blocks.remove(block.getLocation().getLocationString());
 		blocks.put(block.getLocation().getLocationString(), block);
 		int chunk = (int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels);
@@ -91,6 +102,13 @@ public class World {
 			}else System.out.println("Chunk = null");			
 		}
 		return true;
+	}
+	public boolean breakBlockNaturally(String loc_string) {
+		if(blocks.get(loc_string) != null && blocks.containsKey(loc_string)) {
+			blocks.get(loc_string).destroy();
+			blocks.remove(loc_string);
+			return true;
+		}else return false;
 	}
 	public boolean removeBlock(String loc_string) {
 		if(blocks.containsKey(loc_string)) blocks.remove(loc_string);
@@ -104,7 +122,7 @@ public class World {
 			if(block.getMaterial() != Material.AIR) return block;
 		}
 		return null;
-	}	
+	}
 	private int width_blocks_amount = 0;//Wie viele Blöcke passen in die breite des Bildschirmes? //Gehört zur alten Render Methode
 	private int height_blocks_amount = 0;//Wie viele Blöcke passen in die Höhe des Bildschirmes? //Gehört zur alten Render Methode
 	private int x_r = 0;//Gehört zur alten Render Methode
@@ -198,7 +216,10 @@ public class World {
 		if(player != null) player.tick();
 		for(Zombie z : zombies) z.tick();
 		if(player != null) SquareCraft.getCamera().tick(player);
-		for(Entity ent : entities) if(ent != null) ent.tick();
+		for(Entity ent : entities) {
+			if(ent != null) ent.tick();
+			if(ent != null) ent.addTime();
+		}
 		physics.applyGravity();
 	}
 	public void listBlocks() {
@@ -221,7 +242,6 @@ public class World {
 	}
 	public boolean spawnEntity(Entity ent) {
 		if(entities.contains(ent) == false) {
-			if(ent instanceof Item) System.out.println("Item spawned!");
 			entities.add(ent);
 			return true;
 		}else return false;

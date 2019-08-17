@@ -7,9 +7,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.xxfreakdevxx.de.game.Location;
+import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
+import me.xxfreakdevxx.de.game.inventory.ItemStack;
 import me.xxfreakdevxx.de.game.object.Explosion;
 import me.xxfreakdevxx.de.game.object.Material;
+import me.xxfreakdevxx.de.game.object.entity.Item;
 
 public class TNTBlock extends Block {
 	
@@ -67,5 +70,13 @@ public class TNTBlock extends Block {
 			timer.schedule(task, 0, blastPeroid);
 		}
 
+	}
+	@Override
+	public Block clone() {
+		return new TNTBlock(getLocation());
+	}
+	@Override
+	public void destroy() {
+		World.getWorld().spawnEntity(new Item(getLocation().add(SquareCraft.blocksize/2, 0d), new ItemStack(material)));
 	}
 }

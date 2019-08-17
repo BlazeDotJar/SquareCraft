@@ -36,6 +36,9 @@ public abstract class GameObject {
 	}
 
 	public Location getLocation() {
+		return location.clone();
+	}
+	public Location getUnclonedLocation() {
 		return location;
 	}
 

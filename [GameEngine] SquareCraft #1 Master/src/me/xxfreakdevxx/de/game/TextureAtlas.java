@@ -46,6 +46,7 @@ public class TextureAtlas {
 		textures.put("explosion_large_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_large_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 		textures.put("explosion_medium_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_medium_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 		textures.put("explosion_small_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_small_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("player_head", loadImage("/assets/{RESOURCE_PACK}/textures/entity/player_head.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 	}
 	
 	public static BufferedImage getTexture(String key) {

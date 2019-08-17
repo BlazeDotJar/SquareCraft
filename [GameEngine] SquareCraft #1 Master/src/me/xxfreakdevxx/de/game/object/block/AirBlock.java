@@ -36,4 +36,12 @@ public class AirBlock extends Block {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public Block clone() {
+		return new AirBlock(getLocation());
+	}
+	@Override
+	public void destroy() {
+		
+	}
 }

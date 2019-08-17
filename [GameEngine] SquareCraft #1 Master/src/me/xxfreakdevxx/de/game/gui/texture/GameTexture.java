@@ -21,8 +21,7 @@ public class GameTexture {
 	private HashMap<Integer, ArrayList<BufferedImage>> frames = new HashMap<Integer, ArrayList<BufferedImage>>();
 	private ImageMeta meta = null;
 //	private ArrayList<Integer> meta = null;
-	private int frame_amount = 0; /* Die Anzahl an Animations Bildern */
-	private int current_frame = 0; /* Die aktuelle ID des Bildes, welches als Letztes zurückgegeben wurde */
+	public int current_frame = 0; /* Die aktuelle ID des Bildes, welches als Letztes zurückgegeben wurde */
 	public int current_row = 0;
 	private double width = 0; /* Die Breite der Frames in Pixel */
 	private double height = 0; /* Die Höhe der Frames in Pixel */
@@ -40,12 +39,11 @@ public class GameTexture {
 	 * @param height
 	 * @param loc
 	 */
-	public GameTexture(BufferedImage image, String meta_path, int frame_amount, int width, int height, Location loc) {
+	public GameTexture(BufferedImage image, String meta_path, int width, int height, Location loc) {
 		super();
 		this.image = image;
 //		this.meta = meta;
 		this.meta = new ImageMeta(image, meta_path);
-		this.frame_amount = frame_amount;
 		this.width = width;
 		this.height = height;
 		this.loc = loc;

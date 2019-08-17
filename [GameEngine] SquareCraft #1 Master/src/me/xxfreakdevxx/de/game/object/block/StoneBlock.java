@@ -5,7 +5,11 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import me.xxfreakdevxx.de.game.Location;
+import me.xxfreakdevxx.de.game.SquareCraft;
+import me.xxfreakdevxx.de.game.environment.World;
+import me.xxfreakdevxx.de.game.inventory.ItemStack;
 import me.xxfreakdevxx.de.game.object.Material;
+import me.xxfreakdevxx.de.game.object.entity.Item;
 
 public class StoneBlock extends Block {
 	
@@ -36,5 +40,13 @@ public class StoneBlock extends Block {
 	public void interact() {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public Block clone() {
+		return new StoneBlock(getLocation());
+	}
+	@Override
+	public void destroy() {
+		World.getWorld().spawnEntity(new Item(getLocation().add(SquareCraft.blocksize/2, 0d), new ItemStack(material)));
 	}
 }

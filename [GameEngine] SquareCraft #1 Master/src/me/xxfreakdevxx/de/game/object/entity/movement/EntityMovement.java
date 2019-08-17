@@ -82,11 +82,13 @@ public class EntityMovement {
 	public int x_add = 0;
 	public int y_add = 0;
 	private double smoothness = 0.0f;
+	double falldistance = 0;
 	public void move() {
+		if(target.getLocation().getY(true) >= 5000) target.remove();
+		falldistance = target.getFallDistance();
+		if(target.isOnGround() == false) target.setFallDistance(falldistance += 0.1);
+		else target.setFallDistance(0D);
 		if(pressed.isEmpty() == false) {
-			double falldistance = target.getFallDistance() ;
-			if(target.isOnGround() == false) target.setFallDistance(falldistance += 0.1);
-			else target.setFallDistance(0D);
 			ColissionDetector col = target.getColission();
 			if(move_type == 1) {
 				for(String dir : pressed) {
@@ -122,7 +124,7 @@ public class EntityMovement {
 		else if(y_velocity < 0f) y_velocity += 0.1f;
 		if(target.getColission().m_col.m5 == true && target.getColission().m_col.m4 == false) target.getUnclonedLocation().setFixYtoRaster();
 		applyJump();
-		
+		if(target.getVelocity().x != 0 || target.getVelocity().y != 0) target.getVelocity().addToLocation(target.getUnclonedLocation());
 		if(x_add == 0 && y_add == 0 && isJumping == false && y_velocity == 0 && x_velocity == 0) isIdling = true;
 		
 		if(target.getGameTexture() != null) setGameTextureData();

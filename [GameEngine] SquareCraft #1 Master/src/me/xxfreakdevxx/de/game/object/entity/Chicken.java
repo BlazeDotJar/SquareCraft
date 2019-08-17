@@ -15,7 +15,7 @@ public class Chicken extends Entity {
 	public Chicken(Location location) {
 		super(location, 26, 20, 12d);
 		texture = TextureAtlas.getTexture("chicken");
-		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/chicken_meta.yml", 6, 47, 44, getUnclonedLocation());
+		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/chicken_meta.yml", 47, 44, getUnclonedLocation());
 		this.gTex.fps = 2.0;
 		setWorld(World.getWorld());
 		behav = new EntityBehavior(this);
@@ -45,8 +45,8 @@ public class Chicken extends Entity {
 		colission.isCollidingTop();
 		colission.isCollidingMiddle();
 		behav.move();
-		if(isOnGround == false) fall_distance+= 0.1;
-		else fall_distance = 0d;
+//		if(isOnGround == false) fall_distance+= 0.1;
+//		else fall_distance = 0d;
 		movement.move();
 		if(getLocation().getY(false) >= 3000) remove();
 	}

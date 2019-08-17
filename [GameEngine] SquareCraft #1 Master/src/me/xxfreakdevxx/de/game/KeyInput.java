@@ -27,7 +27,8 @@ public class KeyInput extends KeyAdapter {
 			for(int key : pressed_keys) {
 				switch(key) {
 				case KeyEvent.VK_E:
-					World.getWorld().player.inventory.showInventory = !World.getWorld().player.inventory.showInventory;
+					if(World.getWorld().player.inventory.showInventory)World.getWorld().player.inventory.close();
+					else World.getWorld().player.inventory.open();
 					release(key);
 					break;
 				case KeyEvent.VK_0:

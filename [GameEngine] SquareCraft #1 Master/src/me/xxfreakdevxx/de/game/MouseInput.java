@@ -1,7 +1,9 @@
 package me.xxfreakdevxx.de.game;
 
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.environment.World.ChunkManager;
@@ -21,6 +23,10 @@ public class MouseInput extends MouseAdapter {
 	public int my = 0;
 	public int x_unconverted = 0;
 	public int y_unconverted = 0;
+	boolean isShiftDown = false;
+	boolean isAltDown = false;
+	boolean isControlDown = false;
+	private ConcurrentLinkedQueue<Integer> pressed = new ConcurrentLinkedQueue<Integer>();
 	private static MouseInput instance = null;
 	public static MouseInput getInstance() {
 		return instance;
@@ -28,6 +34,23 @@ public class MouseInput extends MouseAdapter {
 	
 	public MouseInput() {
 		MouseInput.instance = this;
+	}
+	
+	private int clickspeed = 80;
+	private int tick = 0;
+	public void tick() {
+		if(tick < clickspeed) {
+			tick++;
+		}else {
+			for(int key : pressed) {
+				switch(key) {
+				case MouseEvent.BUTTON1:
+					if(World.world.player.inventory.clicked(key, new Point(x_unconverted, y_unconverted), isShiftDown, isAltDown, isControlDown)) return;
+					break;
+				}
+			}			
+			tick = 0;
+		}
 	}
 	
 	@Override
@@ -38,31 +61,55 @@ public class MouseInput extends MouseAdapter {
 		my = Location.fixToRaster(my);
 		x_unconverted = e.getX();
 		y_unconverted = e.getY();
+		if(pressed.contains(e.getButton()) == false) pressed.add(e.getButton());
 		super.mouseMoved(e);
 	}
 	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		pressed.remove(e.getButton());
+		super.mouseReleased(e);
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		isShiftDown = e.isShiftDown();
+		isAltDown = e.isAltDown();
+		isControlDown = e.isControlDown();
+		mx = (int) (e.getX() + camera.getX());
+		my = (int) (e.getY() + camera.getY());
+		mx = Location.fixToRaster(mx);
+		my = Location.fixToRaster(my);
+		x_unconverted = e.getX();
+		y_unconverted = e.getY();
+		super.mouseDragged(e);
+	}
+	
+	
 	public void mousePressed(MouseEvent e) {
+		isShiftDown = e.isShiftDown();
+		isAltDown = e.isAltDown();
+		isControlDown = e.isControlDown();
+		pressed.add(e.getButton());
 		mx = (int) (e.getX() + camera.getX());
 		my = (int) (e.getY() + camera.getY());
 		mx = Location.fixToRaster(mx);
 		my = Location.fixToRaster(my);
 		GameState state = null;
+		if(World.getWorld().player != null && World.world.player.inventory.clicked(e.getButton(), e.getPoint(), e.isShiftDown(), e.isAltDown(), e.isControlDown())) return;
 		if(SquareCraft.getInstance().gsmanager != null && SquareCraft.getInstance().gsmanager.state != null) state = SquareCraft.getInstance().gsmanager.state;
 		if(state instanceof Playstate) {
 			Playstate ps = (Playstate)state;
 			Location loc = new Location(ps.world, mx, my);
 			switch(e.getButton()) {
 			case MouseEvent.BUTTON1:
-				if(e.isShiftDown()) {
-					ps.world.getBlockAt(loc.getLocationString()).select();
-				}else if(e.isControlDown()){
+				if(e.isControlDown()){
 					for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
 				}else {
-					World.world.player.inventory.clicked(e.getPoint());
 					Block block = ps.world.getBlockAt(loc.getLocationString());
 					if(block == null) SquareCraft.log("Mouse", "Block = null");
 					else {
-						if(ps.world.removeBlock(loc.getLocationString()))
+						if(ps.world.breakBlockNaturally(loc.getLocationString()))
 							ChunkManager.getChunk((int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels)).removeBlock(loc.getLocationString());
 					}
 				}
@@ -70,7 +117,7 @@ public class MouseInput extends MouseAdapter {
 			case MouseEvent.BUTTON3:
 				Zombie zombie = new Zombie(new Location(ps.world, mx, my), 20d);
 				zombie.setWorld(ps.world);
-				if(e.isControlDown()) for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Chicken(loc.add(i*SquareCraft.blocksize, 0).clone()));
+				if(e.isControlDown()) for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Chicken(loc.clone()));
 				else if(e.isAltDown()){
 					Block block = new TNTBlock(new Location(ps.world,mx,my));
 					if(ps.world.setBlock(block))

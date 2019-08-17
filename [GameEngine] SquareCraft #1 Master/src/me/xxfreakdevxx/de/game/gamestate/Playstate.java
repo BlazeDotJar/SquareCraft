@@ -3,12 +3,14 @@ package me.xxfreakdevxx.de.game.gamestate;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import me.xxfreakdevxx.de.game.MouseInput;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.environment.World.WorldSize;
 import me.xxfreakdevxx.de.game.gamestate.GSManager.GameState;
 import me.xxfreakdevxx.de.game.gamestate.GSManager.States;
 import me.xxfreakdevxx.de.game.gui.WAILA;
+import me.xxfreakdevxx.de.game.object.Material;
 
 public class Playstate extends GameState {
 	
@@ -22,6 +24,7 @@ public class Playstate extends GameState {
 		postInit();
 	}
 	public void preInit() {
+		Material.setBlocks();
 		world = new World(WorldSize.SMALL);
 	}
 	public void init() {
@@ -50,6 +53,7 @@ public class Playstate extends GameState {
 	}
 	@Override
 	public void tick() {
+		MouseInput.getInstance().tick();
 		if(readyToRender == false) return;
 		if(world != null) world.tick();
 	}

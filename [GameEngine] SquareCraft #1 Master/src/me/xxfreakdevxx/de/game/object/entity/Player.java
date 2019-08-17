@@ -2,6 +2,7 @@ package me.xxfreakdevxx.de.game.object.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.TextureAtlas;
@@ -13,7 +14,7 @@ import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
 public class Player extends Entity {
 	
 	private HealthIndicator h_bar = null;
-	public Inventory inventory = null;
+	public BufferedImage head = TextureAtlas.getTexture("player_head");
 	
 	public Player(Location location) {
 		super(location, 24, 36, 20.0d);
@@ -21,7 +22,7 @@ public class Player extends Entity {
 		this.displayname = "L E A";
 		this.movement.isPlayer = true;
 		this.texture = TextureAtlas.getTexture("player_anima");
-		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/player_anima_meta.yml", 6, 18, 22, getUnclonedLocation());
+		this.gTex = new GameTexture(texture, "/assets/{RESOURCE_PACK}/textures/entity/player_anima_meta.yml", 18, 22, getUnclonedLocation());
 		this.gTex.fps = 24.0;
 		this.h_bar = new HealthIndicator(this);
 		this.inventory = new Inventory(16, 4);
@@ -32,6 +33,7 @@ public class Player extends Entity {
 		g.setColor(Color.GREEN);
 //		g.draw3DRect(getLocation().getIntX(true), getLocation().getIntY(true), width, height, true);
 		g.drawImage(gTex.getNextFrame(true), getLocation().getIntX(true)+2, getLocation().getIntY(true)+2, width, height, null);
+//		g.drawImage(head, getLocation().getIntX(true)+2+4, getLocation().getIntY(true)+2-10, 20, 30, null);
 		colission.render(g);
 		renderDisplayname(g);
 		h_bar.render(g);
@@ -41,6 +43,7 @@ public class Player extends Entity {
 	@Override
 	public void remove() {
 		world.removeEntity(this);
+		world.spawnPlayer();
 	}
 
 	@Override
@@ -61,7 +64,10 @@ public class Player extends Entity {
 			colission.isCollidingTop();
 			colission.isCollidingMiddle();
 		}
+//		if(isOnGround() == false) setFallDistance(this.fall_distance += 0.1);
+//		else setFallDistance(0D);
 		movement.move();
+		checkForNearbyItems();
 	}
 	
 	public EntityMovement getMovement() {

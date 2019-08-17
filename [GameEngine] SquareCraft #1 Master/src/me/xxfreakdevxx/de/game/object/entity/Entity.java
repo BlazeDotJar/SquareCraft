@@ -7,13 +7,17 @@ import java.awt.Graphics;
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
+import me.xxfreakdevxx.de.game.inventory.Inventory;
 import me.xxfreakdevxx.de.game.object.GameObject;
 import me.xxfreakdevxx.de.game.object.entity.movement.ColissionDetector;
 import me.xxfreakdevxx.de.game.object.entity.movement.EntityMovement;
+import me.xxfreakdevxx.de.game.object.entity.movement.Vector;
 
 public abstract class Entity extends GameObject {
 	
 	/* Variables */
+	protected int timeLived = 0;
+	public String displayname = "LivingEntity";/* Max 12 Chars */
 	protected final int damageIndicatorCooldown = 3;
 	protected boolean showIndicator = false;
 	protected int indicatorTime = 0;
@@ -25,6 +29,9 @@ public abstract class Entity extends GameObject {
 	public boolean noclip = false;
 	public boolean flipTextureLeft = true;
 	public boolean flipTextureRight = true;
+	protected Vector velocity = new Vector(0d,0d);
+	public Inventory inventory = null;
+	public int pickupRange = 3*SquareCraft.blocksize;
 	
 	/* Health Regenerating */
 	private int regenerating_ticks = 0;
@@ -53,6 +60,10 @@ public abstract class Entity extends GameObject {
 	public abstract void remove();
 	public abstract void damage(double damage, Entity shooter);
 	
+	public void addTime() {
+		timeLived++;
+	}
+	
 	public void regenerate() {
 		if(health < maxHealth) {
 			if(hasDelay == true) {
@@ -69,31 +80,20 @@ public abstract class Entity extends GameObject {
 			}else regenerating_ticks++;
 		}
 	}
-	
-	/* Healthbar */
-	private double healthbarPrefferedLength = 100;
-	private double healthbarHeight = 3;
-	private Color healthColorFriendly = new Color(21, 221, 17);
-	private Color healthColorEnemy = new Color(235, 19, 22);
-	public String displayname = "LivingEntity";/* Max 12 Chars */
-	private int healthbarX = 0;
-	private int healthbarY = 0;
-	public void renderHealthbar(Graphics g) {
-		healthbarX = (int) ((getLocation().getIntX(true) + (width/2)) - (healthbarPrefferedLength/2));
-		healthbarY = (int) (getLocation().getIntY(true) - (healthbarHeight));
-		double one = maxHealth / 100;
-		double total = health / one;
-		g.setColor(Color.BLACK);
-		g.fillRect(healthbarX, healthbarY, (int) healthbarPrefferedLength, (int) healthbarHeight);
-		g.fillRect(healthbarX, healthbarY, (int) ((int) total), (int) healthbarHeight);
-	}
 	public void renderDisplayname(Graphics g) {
 		g.setFont(new Font("consolas", 0, 14));
 		g.setColor(new Color(0f,0f,0f,0.4f));
-		g.fillRect((getLocation().getIntX(true)-(SquareCraft.calculateStringWidth(g.getFont(), displayname)/2)+10)-2, (int) (getLocation().getIntY(true)-19-healthbarHeight), SquareCraft.calculateStringWidth(g.getFont(), displayname)+4, 16);
+		g.fillRect((getLocation().getIntX(true)-(SquareCraft.calculateStringWidth(g.getFont(), displayname)/2)+10)-2, (int) (getLocation().getIntY(true)-19), SquareCraft.calculateStringWidth(g.getFont(), displayname)+4, 16);
 //		g.fillRect((getLocation().getIntX(true)+(width/2) - 50), (int) (getLocation().getIntY(true)-19-healthbarHeight), 100, 16);
 		g.setColor(Color.WHITE);
-		g.drawString(displayname, (getLocation().getIntX(true)-(SquareCraft.calculateStringWidth(g.getFont(), displayname)/2)+10), getLocation().getIntY(true)-7-(int)healthbarHeight);
+		g.drawString(displayname, (getLocation().getIntX(true)-(SquareCraft.calculateStringWidth(g.getFont(), displayname)/2)+10), getLocation().getIntY(true)-7);
+	}
+	
+	public void addVelocity(Vector vector) {
+		this.velocity.add(vector);
+	}
+	public Vector getVelocity() {
+		return velocity;
 	}
 	
 	/**
@@ -170,6 +170,42 @@ public abstract class Entity extends GameObject {
 	
 	public void setFallDistance(double distance) {
 		this.fall_distance = distance;
+		if(distance == 0D) {
+			velocity.x = 0d;
+			velocity.y = 0d;
+		}
+	}
+	
+	private double x1 = 0;
+	private double y1 = 0;
+	private double x2 = 0;
+	private double y2 = 0;
+	public void checkForNearbyItems() {
+		for(Entity ent : world.getEntities()) {
+			if(ent instanceof Item) {
+				if(getLocation().getIntX(true) > ent.getLocation().getX(true)) {
+					x1 = getLocation().getX(true);
+					x2 = ent.getLocation().getX(true);
+				}else  {
+					x1 = ent.getLocation().getX(true);
+					x2 = getLocation().getX(true);
+				}
+				if(getLocation().getIntY(true) > ent.getLocation().getY(true)) {
+					y1 = getLocation().getY(true);
+					y2 = ent.getLocation().getY(true);
+				}else  {
+					y1 = ent.getLocation().getY(true);
+					y2 = getLocation().getY(true);
+				}
+				
+				if(x1 - x2 <= pickupRange && y1 - y2 <= pickupRange && ent.timeLived >= ((Item)ent).pickupDelay && inventory.addItem(((Item)ent).getItemStack()) == true) {
+					World.getWorld().removeEntity(ent);
+				}
+			}
+		}
+	}
+	public double getPickupRange() {
+		return pickupRange;
 	}
 	
 	public void setOnGround(boolean onGround) {
