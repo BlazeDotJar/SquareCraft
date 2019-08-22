@@ -25,7 +25,7 @@ public class Bow extends ItemStack {
 	int mx, my, px, py;
 	double targetx = 0.0d;
 	double targety = 0.0d;
-	int radius = 60;
+	int radius = 10;
 	double bx = 0d;
 	double by = 0d;
 	double sx = 0d;
