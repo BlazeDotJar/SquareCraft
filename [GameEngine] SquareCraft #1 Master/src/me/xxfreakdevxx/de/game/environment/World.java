@@ -18,6 +18,7 @@ import me.xxfreakdevxx.de.game.object.block.DirtBlock;
 import me.xxfreakdevxx.de.game.object.block.GrassBlock;
 import me.xxfreakdevxx.de.game.object.block.StoneBlock;
 import me.xxfreakdevxx.de.game.object.entity.Entity;
+import me.xxfreakdevxx.de.game.object.entity.Item;
 import me.xxfreakdevxx.de.game.object.entity.Player;
 import me.xxfreakdevxx.de.game.object.entity.Zombie;
 
@@ -81,12 +82,15 @@ public class World {
 	}
 	public boolean setBlock(Block block) {
 		if(blocks.get(block.getLocation().getLocationString()) == null || blocks.get(block.getLocation().getLocationString()).getMaterial() == Material.AIR) {
+
+			if(player != null && player.getBounds().intersects(block.getBounds())) return false;
+			for(Entity ent : entities) if(ent instanceof Item == false && ent.getBounds().intersects(block.getBounds())) return false;
 			blocks.put(block.getLocation().getLocationString(), block);
 			int chunk = (int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels);
 			if(isGenerated) {
 				ChunkManager.getChunk(chunk).setBlock(block);
 				if(ChunkManager.getChunk(chunk) != null) {
-				}else System.out.println("Chunk = null");			
+				}else System.out.println("Chunk = null");
 			}
 			return true;
 		}
@@ -194,6 +198,7 @@ public class World {
 			y_ent = ent.getLocation().getIntY(false);
 			if(SquareCraft.isLocInOnScrren(x_ent, y_ent)) ent.render(g);
 		}
+		if(player != null && player.getInventory() != null) player.getInventory().render(g);
 	}
 	
 	public void tick() {

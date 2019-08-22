@@ -36,7 +36,7 @@ public class MouseInput extends MouseAdapter {
 		MouseInput.instance = this;
 	}
 	
-	private int clickspeed = 80;
+	private int clickspeed = 30;
 	private int tick = 0;
 	public void tick() {
 		if(tick < clickspeed) {
@@ -45,7 +45,31 @@ public class MouseInput extends MouseAdapter {
 			for(int key : pressed) {
 				switch(key) {
 				case MouseEvent.BUTTON1:
-					if(World.world.player.inventory.clicked(key, new Point(x_unconverted, y_unconverted), isShiftDown, isAltDown, isControlDown)) return;
+					GameState state = null;
+					if(SquareCraft.getInstance().gsmanager != null && SquareCraft.getInstance().gsmanager.state != null) state = SquareCraft.getInstance().gsmanager.state;
+					if(state instanceof Playstate) {
+						Playstate ps = (Playstate)state;
+						Location loc = new Location(ps.world, mx, my);
+						if(World.world.player.inventory.clicked(key, new Point(x_unconverted, y_unconverted), isShiftDown, isAltDown, isControlDown)) return;
+//					if(isOnInventory(p) == false && cursor.getItemStack().getMaterial() == Material.AIR) {
+//						temp_loc = new Location(p.getX(), p.getY());
+//						temp_loc.fixLocationToRaster();
+//						Block b = World.getWorld().getBlockAt(temp_loc.getLocationString());
+//						if(b.getMaterial() != Material.AIR) {
+//							b.health-=2;
+//							if(b.health < 0) b.destroy();
+//						}
+//					}
+						Block block = ps.world.getBlockAt(loc.getLocationString());
+						if(block == null || block.getMaterial() == Material.AIR) SquareCraft.log("Mouse", "Block = null");
+						else {
+							block.health -= World.getWorld().player.hand_block_damage;
+							if(block.health < 0) {								
+								if(ps.world.breakBlockNaturally(loc.getLocationString()))
+									ChunkManager.getChunk((int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels)).removeBlock(loc.getLocationString());
+							}
+						}
+					}
 					break;
 				}
 			}			
@@ -105,12 +129,15 @@ public class MouseInput extends MouseAdapter {
 			case MouseEvent.BUTTON1:
 				if(e.isControlDown()){
 					for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
-				}else {
+				} else {
 					Block block = ps.world.getBlockAt(loc.getLocationString());
-					if(block == null) SquareCraft.log("Mouse", "Block = null");
+					if(block == null && block.getMaterial() != Material.AIR) SquareCraft.log("Mouse", "Block = null");
 					else {
-						if(ps.world.breakBlockNaturally(loc.getLocationString()))
-							ChunkManager.getChunk((int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels)).removeBlock(loc.getLocationString());
+						block.health -= World.getWorld().player.hand_block_damage;
+						if(block.health < 0) {							
+							if(ps.world.breakBlockNaturally(loc.getLocationString()))
+								ChunkManager.getChunk((int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels)).removeBlock(loc.getLocationString());
+						}
 					}
 				}
 				break;

@@ -26,6 +26,10 @@ public class KeyInput extends KeyAdapter {
 		if(World.getWorld() != null && World.getWorld().isGenerated) {			
 			for(int key : pressed_keys) {
 				switch(key) {
+				case KeyEvent.VK_C:
+					World.getWorld().player.circular = !World.getWorld().player.circular;
+					release(key);
+					break;
 				case KeyEvent.VK_E:
 					if(World.getWorld().player.inventory.showInventory)World.getWorld().player.inventory.close();
 					else World.getWorld().player.inventory.open();

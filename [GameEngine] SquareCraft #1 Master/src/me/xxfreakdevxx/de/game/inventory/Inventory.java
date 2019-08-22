@@ -82,38 +82,44 @@ public class Inventory {
 			}
 			trash.isClicked(p);
 			return true;
-		}else if(cursor.getItemStack().getMaterial() != Material.AIR && button == MouseEvent.BUTTON1 && isShiftDown == false) {
-			if(cursor.getItemStack().getMaterial().isBlock()) {
+		}else if(isOnInventory(p) == false && cursor.getItemStack().getMaterial() != Material.AIR && button == MouseEvent.BUTTON1 && isShiftDown == false) {
+			ItemStack item = cursor.getItemStack().clone();
+			if(item.getMaterial().isBlock()) {
 				
 				Block b = cursor.getItemStack().getMaterial().getBlock().clone();
 				
 				b.setLocation(new Location(p.x+SquareCraft.getCamera().getX(), p.y+SquareCraft.getCamera().getY()));
 				b.setLocation(b.getLocation().fixLocationToRaster());
-				World.getWorld().setBlock(b);
+				if(World.getWorld().setBlock(b)) cursor.setItemStack(item.setAmount(item.getAmount() - 1).clone());
 			}
-			if(cursor.getItemStack().getAmount() == 0) cursor.resetItemStack();
+			if(item.getAmount() == 0) cursor.resetItemStack();
 			else cursor.getItemStack().setAmount(cursor.getItemStack().getAmount()-1);
-		}else if(cursor.getItemStack().getMaterial() != Material.AIR && button == MouseEvent.BUTTON1 && isShiftDown){
-			temp_loc = World.getWorld().player.getLocation();
-			Item item = null;
-			if(p.getX() < temp_loc.getX(true)) {
-				item = new Item(
-						new Location(World.getWorld(), temp_loc.getX(false)+World.getWorld().player.width/2,
-								temp_loc.getY(false)),
-						cursor.getItemStack());
-				item.addVelocity(new Vector(-3d,-3d));
-				
-			}else if(p.getX() > temp_loc.getX(true)) {
-				item = new Item(
-						new Location(World.getWorld(), temp_loc.getX(false),
-								temp_loc.getY(false)),
-						cursor.getItemStack());
-				item.addVelocity(new Vector(3d,-3d));
-			}
-			if(World.getWorld().spawnEntity(item)) {cursor.resetItemStack();}
+		}else if(isOnInventory(p) == false && cursor.getItemStack().getMaterial() != Material.AIR && button == MouseEvent.BUTTON3){
+			//Item Wegwerfen
+			dropItem(p);
 		}
 		if(cursor.getItemStack().getMaterial() == Material.AIR == false) return true;
 		else return false;
+	}
+	
+	public void dropItem(Point p) {
+		temp_loc = World.getWorld().player.getLocation();
+		Item item = null;
+		if(p.getX() < temp_loc.getX(true)) {
+			item = new Item(
+					new Location(World.getWorld(), temp_loc.getX(false)+World.getWorld().player.width/2,
+							temp_loc.getY(false)),
+					cursor.getItemStack());
+			item.addVelocity(new Vector(-2d,-2d));
+			
+		}else if(p.getX() > temp_loc.getX(true)) {
+			item = new Item(
+					new Location(World.getWorld(), temp_loc.getX(false),
+							temp_loc.getY(false)),
+					cursor.getItemStack());
+			item.addVelocity(new Vector(2d,-2d));
+		}
+		if(World.getWorld().spawnEntity(item)) {cursor.resetItemStack();}
 	}
 	
 	public boolean isOnInventory(Point p) {
@@ -382,6 +388,8 @@ public class Inventory {
 				g.setColor(Color.BLACK);
 				g.drawRect(x-(size/2), y-(size/2), size, size);
 				g.drawImage(item.getMaterial().getTexture(), x-(size/2), y-(size/2), size, size, null);
+				g.setColor(Color.BLACK);
+				g.drawString(item.getAmount()+"", x-(size/2), y-(size/2));
 			}
 		}
 		

@@ -15,10 +15,13 @@ public abstract class Block extends GameObject {
 	protected boolean showSelection = false;
 	protected Color selection_color = new Color(1f,1f,0f,0.1f);
 	protected int chunk_id = 0;
+	public int health = 0;// Block Health regelt, ob ein Block per TNT zerstört wird oder nicht
+	
 	public Block(Material material, Location location) {
 		super(location, SquareCraft.blocksize, SquareCraft.blocksize);
 		this.material = material;
 		this.texture = TextureAtlas.getTexture(material.getName());
+		this.health = material.getHealth();
 	}
 	
 	public abstract void tick();

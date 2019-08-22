@@ -55,11 +55,11 @@ public class TNTBlock extends Block {
 				int count = 0;
 				@Override
 				public void run() {
-					if(count != blastDelay) {
+					if(count < blastDelay) {
 						isFused = !isFused;
 					}else {
 						World.getWorld().removeBlock(location.getLocationString());
-						new Explosion(getLocation());
+						new Explosion(getLocation(), 9);
 						timer.cancel();
 						task.cancel();
 					}

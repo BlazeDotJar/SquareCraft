@@ -16,25 +16,25 @@ import me.xxfreakdevxx.de.game.object.block.TNTBlock;
 
 public enum Material {
 	
-	AIR(0, "air", "Luft", false, true, "", ""),
-	STONE(1, "stone", "Stein", true, true, "/assets/{RESOURCE_PACK}/textures/block/stone_2.png", ""),
-	DIRT(2, "dirt", "Dreck", true, true, "/assets/{RESOURCE_PACK}/textures/block/dirt_2.png", ""),
-	GRASS(3, "gras", "Gras", true, true, "/assets/{RESOURCE_PACK}/textures/block/grass_2.png", ""),
-	SAND(4, "sand", "Sand", true, true, "/assets/{RESOURCE_PACK}/textures/block/sand.png", ""),
-	IRON_ORE(5, "iron_ore", "Eisenerz", true, true, "/assets/{RESOURCE_PACK}/textures/block/iron_ore.png", ""),
-	COAL_ORE(6, "coal_ore", "Kohleerz", true, true, "/assets/{RESOURCE_PACK}/textures/block/coal_ore.png", ""),
-	TNT(7, "tnt", "Sprengstoff", true, true, "/assets/{RESOURCE_PACK}/textures/block/tnt.png", "");
+	AIR(0, "air", "Luft", 999, false, true, "", ""),
+	STONE(1, "stone", "Stein", 25, true, true, "/assets/{RESOURCE_PACK}/textures/block/stone_2.png", ""),
+	DIRT(2, "dirt", "Dreck", 15, true, true, "/assets/{RESOURCE_PACK}/textures/block/dirt_2.png", ""),
+	GRASS(3, "gras", "Gras", 15, true, true, "/assets/{RESOURCE_PACK}/textures/block/grass_2.png", ""),
+	SAND(4, "sand", "Sand", 20, true, true, "/assets/{RESOURCE_PACK}/textures/block/sand.png", ""),
+	IRON_ORE(5, "iron_ore", "Eisenerz", 30, true, true, "/assets/{RESOURCE_PACK}/textures/block/iron_ore.png", ""),
+	COAL_ORE(6, "coal_ore", "Kohleerz", 35, true, true, "/assets/{RESOURCE_PACK}/textures/block/coal_ore.png", ""),
+	TNT(7, "tnt", "Sprengstoff", 80, true, true, "/assets/{RESOURCE_PACK}/textures/block/tnt.png", "");
 	
-	int id;
+	int id, health;
 	String name, displayname, filepath, audiofilepath;
-	boolean isSolid;
-	boolean isBlock;
+	boolean isSolid, isBlock;
 	Block block;
 	
-	Material(int id, String name, String displayname, boolean isSolid, boolean isBlock, String filepath, String audiofilepath) {
+	Material(int id, String name, String displayname, int health, boolean isSolid, boolean isBlock, String filepath, String audiofilepath) {
 		this.id=id;
 		this.name=name;
 		this.displayname=displayname;
+		this.health=health;
 		this.isSolid=isSolid;
 		this.isBlock=isBlock;
 		this.filepath=filepath;
@@ -51,6 +51,10 @@ public enum Material {
 
 	public String getDisplayname() {
 		return displayname;
+	}
+	
+	public int getHealth() {
+		return health;
 	}
 	
 	public boolean isSolid() {

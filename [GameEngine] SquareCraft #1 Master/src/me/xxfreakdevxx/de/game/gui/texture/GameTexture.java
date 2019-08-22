@@ -26,7 +26,7 @@ public class GameTexture {
 	private double width = 0; /* Die Breite der Frames in Pixel */
 	private double height = 0; /* Die Höhe der Frames in Pixel */
 	public double fps = 12.0; /* Die Anzahl an Bildern pro Sekunde, wenn die Animation automatisch gerendert werden soll */
-	private Location loc = null; /* Die Position, an der die Animation gezeichnet werden soll. ACHTUNG: Die Location muss UNCLONED sein ! */
+//	private Location loc = null; /* Die Position, an der die Animation gezeichnet werden soll. ACHTUNG: Die Location muss UNCLONED sein ! */
 	private boolean playBackwards = false; /* Gibt an, ob die Animation rückwärts abgespielt werden soll. false = vorwärts, true = rückwärts */
 	
 	
@@ -46,7 +46,7 @@ public class GameTexture {
 		this.meta = new ImageMeta(image, meta_path);
 		this.width = width;
 		this.height = height;
-		this.loc = loc;
+//		this.loc = loc;
 		cutOutFrames();
 	}
 	

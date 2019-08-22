@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import me.xxfreakdevxx.de.game.Location;
-import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
 import me.xxfreakdevxx.de.game.inventory.ItemStack;
 import me.xxfreakdevxx.de.game.object.Material;
@@ -47,6 +46,6 @@ public class DirtBlock extends Block {
 	}
 	@Override
 	public void destroy() {
-		World.getWorld().spawnEntity(new Item(getLocation().add(SquareCraft.blocksize/2, 0d), new ItemStack(material)));
+		World.getWorld().spawnEntity(new Item(getLocation().add(0, 0d), new ItemStack(material)));
 	}
 }
