@@ -131,7 +131,7 @@ public class MouseInput extends MouseAdapter {
 					for(int i = 0; i != 10; i++) World.getWorld().spawnEntity(new Pig(loc.add(i*SquareCraft.blocksize, 0).clone()));
 				} else {
 					Block block = ps.world.getBlockAt(loc.getLocationString());
-					if(block == null && block.getMaterial() != Material.AIR) SquareCraft.log("Mouse", "Block = null");
+					if(block == null) SquareCraft.log("Mouse", "Block = null");
 					else {
 						block.health -= World.getWorld().player.hand_block_damage;
 						if(block.health < 0) {							

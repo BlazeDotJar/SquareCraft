@@ -1,5 +1,7 @@
 package me.xxfreakdevxx.de.game;
 
+import java.awt.Point;
+
 import me.xxfreakdevxx.de.game.environment.World;
 
 public class Location {
@@ -147,5 +149,8 @@ public class Location {
 	}
 	public int getIntPreviousY() {
 		return (int)yPrev;
+	}
+	public Point getPoint() {
+		return new Point((int)xCurrent, (int)yCurrent);
 	}
 }

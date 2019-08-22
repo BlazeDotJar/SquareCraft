@@ -45,8 +45,8 @@ public class Explosion {
 		        		((TNTBlock)b).blastDelay = 1;
 		        		((TNTBlock)b).interact();
 		        	}
-//		        	b.health -= SquareCraft.randomInteger(6+(size-ii), 8+(size-ii));
-		        	b.health -= SquareCraft.randomInteger(5, 6);
+		        	b.health -= SquareCraft.randomInteger(6+(size-ii), 8+(size-ii));
+//		        	b.health -= SquareCraft.randomInteger(5, 6);
 		        	if(b.health <= 0) World.getWorld().breakBlockNaturally(b.getLocation().getLocationString());
 		        }
 		    }

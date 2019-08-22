@@ -4,8 +4,10 @@ import me.xxfreakdevxx.de.game.object.Material;
 
 public class ItemStack {
 	
-	private Material material = Material.AIR;
-	private int amount = 1;
+	protected Material material = Material.AIR;
+	protected int amount = 1;
+	protected int durability = 0;
+	protected int max_durability = 0;
 	
 	public ItemStack(Material material, int amount) {
 		this.material = material;
