@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.SquareCraft;
@@ -20,6 +21,7 @@ public class Player extends Entity {
 	public BufferedImage head = TextureAtlas.getTexture("player_head");
 	public boolean circular = false;
 	public int hand_block_damage = 15;
+	public ArrayList<Point> bows = new ArrayList<Point>();
 	
 	public Player(Location location) {
 		super(location, 24, 36, 20.0d);
@@ -52,7 +54,7 @@ public class Player extends Entity {
 	public void render(Graphics g) {
 		g.setColor(Color.GREEN);
 //		g.draw3DRect(getLocation().getIntX(true), getLocation().getIntY(true), width, height, true);
-		g.drawImage(gTex.getNextFrame(true), getLocation().getIntX(true)+2, getLocation().getIntY(true)+2, width, height, null);
+		g.drawImage(gTex.getNextFrame(true), getLocation().getIntX(true), getLocation().getIntY(true), width, height, null);
 		g.drawImage(head, getLocation().getIntX(true)+2+4, getLocation().getIntY(true)+2-10, 20, 30, null);
 		colission.render(g);
 		renderDisplayname(g);
@@ -69,6 +71,10 @@ public class Player extends Entity {
 			}else tick++;
 			destroyCircular(g, points, radius, new Point((int)getUnclonedLocation().xCurrent+(width), (int)getUnclonedLocation().yCurrent+(height)));
 		}
+		g.setColor(Color.BLACK);
+		for(Point p : bows) g.fillRect((int)(p.getX() - SquareCraft.getCamera().getX()), (int)(p.getY() - SquareCraft.getCamera().getY()), 4, 4);
+		g.drawLine(SquareCraft.windowWidth/2, 0, SquareCraft.windowWidth/2, SquareCraft.windowHeight);
+		g.drawLine(0, SquareCraft.windowHeight/2, SquareCraft.windowWidth, SquareCraft.windowHeight/2);
 	}
 
 	@Override

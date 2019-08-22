@@ -17,7 +17,7 @@ public class Camera {
 	}
 	
 	public void tick(GameObject object) {
-		x += ((object.getLocation().getX(false) - x) - SquareCraft.windowWidth/2) * 0.05f;
+		x += (((object.getLocation().getX(false) - x) - SquareCraft.windowWidth/2) + (object.width/2)) * 0.05f;
 		y += ((object.getLocation().getY(false) - y) - SquareCraft.windowHeight/2) * 0.05f;
 //		x += ((object.getLocation().getX(false) - x) - SquareCraft.windowWidth/2);
 //		y += ((object.getLocation().getY(false) - y) - SquareCraft.windowHeight/2);

@@ -15,10 +15,10 @@ public class Vector {
 	public Location addToLocation(Location location) {
 		roundCoords();
 		location.add(x,y);
-//		if(x < -0.05) x+=0.05d;
-//		else if(x > 0.05) x-=0.05d;
-//		if(y < -0.05) y+=0.05d;
-//		else if(y > 0.05) y-=0.05d;
+		if(x < -0.05) x+=0.05d;
+		else if(x > 0.05) x-=0.05d;
+		if(y < -0.05) y+=0.05d;
+		else if(y > 0.05) y-=0.05d;
 		return location;
 	}
 	

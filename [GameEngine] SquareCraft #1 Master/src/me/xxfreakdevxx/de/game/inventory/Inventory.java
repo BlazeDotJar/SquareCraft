@@ -9,6 +9,7 @@ import me.xxfreakdevxx.de.game.Location;
 import me.xxfreakdevxx.de.game.MouseInput;
 import me.xxfreakdevxx.de.game.SquareCraft;
 import me.xxfreakdevxx.de.game.environment.World;
+import me.xxfreakdevxx.de.game.inventory.item.Bow;
 import me.xxfreakdevxx.de.game.object.Material;
 import me.xxfreakdevxx.de.game.object.block.Block;
 import me.xxfreakdevxx.de.game.object.entity.Item;
@@ -33,6 +34,7 @@ public class Inventory {
 	private Color inventory_color = new Color(0f,0.4f,1f,0.8f);
 	private TrashSlot trash = null;
 	private Cursor cursor = new Cursor();
+	private Bow bow = new Bow();
 	
 	public Inventory() {
 		this.inventory_slots_per_row = 14;
@@ -97,6 +99,8 @@ public class Inventory {
 		}else if(isOnInventory(p) == false && cursor.getItemStack().getMaterial() != Material.AIR && button == MouseEvent.BUTTON3){
 			//Item Wegwerfen
 			dropItem(p);
+		}else if(isOnInventory(p) == false && cursor.getItemStack().getMaterial() == Material.AIR && button == MouseEvent.BUTTON1){
+			bow.interact();
 		}
 		if(cursor.getItemStack().getMaterial() == Material.AIR == false) return true;
 		else return false;

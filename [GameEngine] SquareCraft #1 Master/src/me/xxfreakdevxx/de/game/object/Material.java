@@ -24,7 +24,8 @@ public enum Material {
 	IRON_ORE(5, "iron_ore", "Eisenerz", 30, true, true, "/assets/{RESOURCE_PACK}/textures/block/iron_ore.png", ""),
 	COAL_ORE(6, "coal_ore", "Kohleerz", 35, true, true, "/assets/{RESOURCE_PACK}/textures/block/coal_ore.png", ""),
 	TNT(7, "tnt", "Sprengstoff", 80, true, true, "/assets/{RESOURCE_PACK}/textures/block/tnt.png", ""),
-	BOW(8, "bow", "Bogen", 10, false, false, "", "");
+	BOW(8, "bow", "Bogen", 10, false, false, "", ""),
+	ARROW(9, "arrow", "Pfeil", 10, false, false, "/assets/{RESOURCE_PACK}/textures/item/arrow.png", "");
 	
 	int id, health;
 	String name, displayname, filepath, audiofilepath;

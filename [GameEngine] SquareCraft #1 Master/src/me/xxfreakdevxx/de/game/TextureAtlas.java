@@ -43,10 +43,8 @@ public class TextureAtlas {
 		textures.put("pig_anima", loadImage("/assets/{RESOURCE_PACK}/textures/entity/pig_anima.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 		textures.put("healthbar", loadImage("/assets/{RESOURCE_PACK}/textures/indicator/healthbar.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 		textures.put("chicken", loadImage("/assets/{RESOURCE_PACK}/textures/entity/chicken.png".replace("{RESOURCE_PACK}", resource_pack_name)));
-		textures.put("explosion_large_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_large_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
-		textures.put("explosion_medium_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_medium_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
-		textures.put("explosion_small_mask", loadImage("/assets/{RESOURCE_PACK}/textures/tile/explosion_small_mask.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 		textures.put("player_head", loadImage("/assets/{RESOURCE_PACK}/textures/entity/player_head.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("arrow", loadImage("/assets/{RESOURCE_PACK}/textures/item/arrow.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 	}
 	
 	public static BufferedImage getTexture(String key) {
