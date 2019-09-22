@@ -111,7 +111,6 @@ public class MouseInput extends MouseAdapter {
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
-		new Exception() .printStackTrace();
 		isShiftDown = e.isShiftDown();
 		isAltDown = e.isAltDown();
 		isControlDown = e.isControlDown();
