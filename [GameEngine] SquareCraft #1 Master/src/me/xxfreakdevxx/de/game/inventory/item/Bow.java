@@ -35,48 +35,49 @@ public class Bow extends ItemStack {
 	public void interact() {
 //		System.out.println("Shoot!");
 		//Auf dem iPad sind Notizen zum Schießen
-		mx = (int)(MouseInput.getInstance().x_unconverted + SquareCraft.getCamera().getX());
-		my = (int)(MouseInput.getInstance().y_unconverted + SquareCraft.getCamera().getY());
-		px = (int)(World.getWorld().player.getLocation().getIntX(false));
-		py = (int)(World.getWorld().player.getLocation().getIntY(false));
-		
-		int tx = px-mx;
-		int ty = py-my;
-		if(tx > 0) {
-			if(tx > radius) xv = radius;
-			else xv = tx;
-		}else {
-			if(tx < -radius) xv = -radius;
-			else xv = tx;
-		}
-		if(ty > 0) {
-			if(ty > (radius)) yv = radius;
-			else yv = ty;			
-		}else {			
-			if(ty < -(radius)) yv = -radius;
-			else yv = ty;						
-		}
-		//Richtung berichtigen
-		xv *= (-1);
-		yv *= (-1);
-		
-		System.out.println("XV/YV: "+xv+"/"+yv);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		World.getWorld().player.bows.clear();
-		World.getWorld().player.bows.add(new Point((int)targetx, (int)targety));
-		World.getWorld().player.bows.add(new Point((int)px, (int)py));
-		Pig pig = new Pig(World.getWorld().player.getLocation());
-		pig.addVelocity(new Vector(xv, yv));
-		World.getWorld().spawnEntity(pig);
+		/* Deaktiviert aufgrund von  */
+//		mx = (int)(MouseInput.getInstance().x_unconverted + SquareCraft.getCamera().getX());
+//		my = (int)(MouseInput.getInstance().y_unconverted + SquareCraft.getCamera().getY());
+//		px = (int)(World.getWorld().player.getLocation().getIntX(false));
+//		py = (int)(World.getWorld().player.getLocation().getIntY(false));
+//		
+//		int tx = px-mx;
+//		int ty = py-my;
+//		if(tx > 0) {
+//			if(tx > radius) xv = radius;
+//			else xv = tx;
+//		}else {
+//			if(tx < -radius) xv = -radius;
+//			else xv = tx;
+//		}
+//		if(ty > 0) {
+//			if(ty > (radius)) yv = radius;
+//			else yv = ty;			
+//		}else {			
+//			if(ty < -(radius)) yv = -radius;
+//			else yv = ty;						
+//		}
+//		//Richtung berichtigen
+//		xv *= (-1);
+//		yv *= (-1);
+//		
+//		System.out.println("XV/YV: "+xv+"/"+yv);
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		World.getWorld().player.bows.clear();
+//		World.getWorld().player.bows.add(new Point((int)targetx, (int)targety));
+//		World.getWorld().player.bows.add(new Point((int)px, (int)py));
+//		Pig pig = new Pig(World.getWorld().player.getLocation());
+//		pig.addVelocity(new Vector(xv, yv));
+//		World.getWorld().spawnEntity(pig);
 	}
 	
 	

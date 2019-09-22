@@ -21,6 +21,7 @@ public class GrassBlock extends Block {
 	@Override
 	public void render(Graphics g) {
 		g.drawImage(getTexture(), getLocation().getIntX(true), getLocation().getIntY(true), width, height, color, null);
+		renderDamage(g);
 		
 		if(showSelection) {
 			g.setColor(selection_color);

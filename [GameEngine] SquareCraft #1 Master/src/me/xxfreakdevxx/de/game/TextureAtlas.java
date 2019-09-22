@@ -45,6 +45,16 @@ public class TextureAtlas {
 		textures.put("chicken", loadImage("/assets/{RESOURCE_PACK}/textures/entity/chicken.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 		textures.put("player_head", loadImage("/assets/{RESOURCE_PACK}/textures/entity/player_head.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 		textures.put("arrow", loadImage("/assets/{RESOURCE_PACK}/textures/item/arrow.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_0", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_0.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_1", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_1.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_2", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_2.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_3", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_3.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_4", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_4.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_5", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_5.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_6", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_6.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_7", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_7.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_8", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_8.png".replace("{RESOURCE_PACK}", resource_pack_name)));
+		textures.put("damage_stage_9", loadImage("/assets/{RESOURCE_PACK}/textures/destroy_stage_9.png".replace("{RESOURCE_PACK}", resource_pack_name)));
 	}
 	
 	public static BufferedImage getTexture(String key) {

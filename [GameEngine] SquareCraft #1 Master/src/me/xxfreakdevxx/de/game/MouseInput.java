@@ -109,8 +109,9 @@ public class MouseInput extends MouseAdapter {
 		super.mouseDragged(e);
 	}
 	
-	
+	@Override
 	public void mousePressed(MouseEvent e) {
+		new Exception() .printStackTrace();
 		isShiftDown = e.isShiftDown();
 		isAltDown = e.isAltDown();
 		isControlDown = e.isControlDown();
@@ -133,8 +134,8 @@ public class MouseInput extends MouseAdapter {
 					Block block = ps.world.getBlockAt(loc.getLocationString());
 					if(block == null) SquareCraft.log("Mouse", "Block = null");
 					else {
-						block.health -= World.getWorld().player.hand_block_damage;
-						if(block.health < 0) {							
+						ps.world.getBlockAt(loc.getLocationString()).health -= World.getWorld().player.hand_block_damage;
+						if(block.health < 0) {
 							if(ps.world.breakBlockNaturally(loc.getLocationString()))
 								ChunkManager.getChunk((int)(block.getLocation().getIntX(false) / ChunkManager.chunksizePixels)).removeBlock(loc.getLocationString());
 						}

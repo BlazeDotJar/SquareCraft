@@ -19,7 +19,7 @@ public enum Material {
 	AIR(0, "air", "Luft", 999, false, true, "", ""),
 	STONE(1, "stone", "Stein", 25, true, true, "/assets/{RESOURCE_PACK}/textures/block/stone_2.png", ""),
 	DIRT(2, "dirt", "Dreck", 15, true, true, "/assets/{RESOURCE_PACK}/textures/block/dirt_2.png", ""),
-	GRASS(3, "gras", "Gras", 15, true, true, "/assets/{RESOURCE_PACK}/textures/block/grass_2.png", ""),
+	GRASS(3, "gras", "Gras", 35, true, true, "/assets/{RESOURCE_PACK}/textures/block/grass_2.png", ""),
 	SAND(4, "sand", "Sand", 20, true, true, "/assets/{RESOURCE_PACK}/textures/block/sand.png", ""),
 	IRON_ORE(5, "iron_ore", "Eisenerz", 30, true, true, "/assets/{RESOURCE_PACK}/textures/block/iron_ore.png", ""),
 	COAL_ORE(6, "coal_ore", "Kohleerz", 35, true, true, "/assets/{RESOURCE_PACK}/textures/block/coal_ore.png", ""),

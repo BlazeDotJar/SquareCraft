@@ -73,8 +73,8 @@ public class Player extends Entity {
 		}
 		g.setColor(Color.BLACK);
 		for(Point p : bows) g.fillRect((int)(p.getX() - SquareCraft.getCamera().getX()), (int)(p.getY() - SquareCraft.getCamera().getY()), 4, 4);
-		g.drawLine(SquareCraft.windowWidth/2, 0, SquareCraft.windowWidth/2, SquareCraft.windowHeight);
-		g.drawLine(0, SquareCraft.windowHeight/2, SquareCraft.windowWidth, SquareCraft.windowHeight/2);
+//		g.drawLine(SquareCraft.windowWidth/2, 0, SquareCraft.windowWidth/2, SquareCraft.windowHeight);
+//		g.drawLine(0, SquareCraft.windowHeight/2, SquareCraft.windowWidth, SquareCraft.windowHeight/2);
 	}
 
 	@Override
