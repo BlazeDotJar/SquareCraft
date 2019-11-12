@@ -55,7 +55,7 @@ public class Player extends Entity {
 		g.setColor(Color.GREEN);
 //		g.draw3DRect(getLocation().getIntX(true), getLocation().getIntY(true), width, height, true);
 		g.drawImage(gTex.getNextFrame(true), getLocation().getIntX(true), getLocation().getIntY(true), width, height, null);
-		g.drawImage(head, getLocation().getIntX(true)+2+4, getLocation().getIntY(true)+2-10, 20, 30, null);
+//		g.drawImage(head, getLocation().getIntX(true)+2+4, getLocation().getIntY(true)+2-10, 20, 30, null);
 		colission.render(g);
 		renderDisplayname(g);
 		h_bar.render(g);

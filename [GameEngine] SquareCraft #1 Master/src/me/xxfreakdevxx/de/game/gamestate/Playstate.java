@@ -25,7 +25,7 @@ public class Playstate extends GameState {
 	}
 	public void preInit() {
 		Material.setBlocks();
-		world = new World(WorldSize.SMALL);
+		world = new World(WorldSize.MEDIUM);
 	}
 	public void init() {
 		readyToRender = true;
