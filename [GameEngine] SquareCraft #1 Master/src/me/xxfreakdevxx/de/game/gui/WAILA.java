@@ -55,8 +55,8 @@ public class WAILA {
 	}
 	
 	private static void updateMouse() {
-		mx = (int)(MouseInput.getInstance().mx);
-		my = (int)(MouseInput.getInstance().my);
+		mx = (int)(MouseInput.getInstance().getConvertedX(true, false));
+		my = (int)(MouseInput.getInstance().getConvertedY(true, false));
 	}
 	
 }

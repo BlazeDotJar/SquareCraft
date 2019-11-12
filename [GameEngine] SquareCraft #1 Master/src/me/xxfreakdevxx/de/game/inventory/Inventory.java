@@ -383,8 +383,8 @@ public class Inventory {
 		public Cursor() { }
 		
 		public void tick() {
-			x = (int)(MouseInput.getInstance().x_unconverted);
-			y = (int)(MouseInput.getInstance().y_unconverted);
+			x = (int)(MouseInput.getInstance().getUnconvertedX());
+			y = (int)(MouseInput.getInstance().getUnconvertedY());
 		}
 		
 		public void render(Graphics g) {

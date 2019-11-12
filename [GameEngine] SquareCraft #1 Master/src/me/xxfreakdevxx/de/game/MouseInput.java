@@ -19,10 +19,10 @@ import me.xxfreakdevxx.de.game.object.entity.Zombie;
 public class MouseInput extends MouseAdapter {
 	
 	private Camera camera = SquareCraft.getCamera();
-	public int mx = 0;
-	public int my = 0;
-	public int x_unconverted = 0;
-	public int y_unconverted = 0;
+	private int mx = 0;
+	private int my = 0;
+	private int x_unconverted = 0;
+	private int y_unconverted = 0;
 	boolean isShiftDown = false;
 	boolean isAltDown = false;
 	boolean isControlDown = false;
@@ -161,11 +161,33 @@ public class MouseInput extends MouseAdapter {
 					Block block = ps.world.getBlockAt(loc.getLocationString());
 					if(block != null) {
 						SquareCraft.log("Block Info", "X/Y: "+block.getLocation().getX(false)+"/"+block.getLocation().getY(false));
-					}else SquareCraft.log("Block Info", "Block == null");
+					}
 				}
 				break;
 			}
 		}
+	}
+	public int getUnconvertedX() {
+		return mx;
+	}
+	public int getUnconvertedY() {
+		return mx;
+	}
+	public int getConvertedX(boolean addCamera, boolean fixToRaster) {
+		
+		if(addCamera && fixToRaster) return Location.fixToRaster((int)(mx + camera.getX()));
+		else if(addCamera) return (int)(mx + camera.getX());
+		else if(fixToRaster) return Location.fixToRaster((mx));
+		else return 0;
+		
+	}
+	public int getConvertedY(boolean addCamera, boolean fixToRaster) {
+		
+		if(addCamera && fixToRaster) return Location.fixToRaster((int)(my + camera.getY()));
+		else if(addCamera) return (int)(my + camera.getY());
+		else if(fixToRaster) return Location.fixToRaster((my));
+		else return 0;
+		
 	}
 	
 }
